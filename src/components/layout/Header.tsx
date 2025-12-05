@@ -1,0 +1,50 @@
+import { Button } from '@/components/ui/button';
+import { useWallet } from '@/contexts/WalletContext';
+import { Wallet, LogOut, Bell } from 'lucide-react';
+
+export const Header = () => {
+  const { isConnected, address, balance, connectWallet, disconnectWallet } = useWallet();
+
+  return (
+    <header className="sticky top-0 z-30 h-16 border-b border-border bg-background/80 backdrop-blur-xl">
+      <div className="flex h-full items-center justify-between px-6">
+        <div className="flex items-center gap-4">
+          <h1 className="text-lg font-semibold text-foreground">Dashboard</h1>
+        </div>
+
+        <div className="flex items-center gap-4">
+          {/* Notifications */}
+          <Button variant="ghost" size="icon" className="relative">
+            <Bell className="h-5 w-5" />
+            <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-primary text-[10px] font-bold flex items-center justify-center text-primary-foreground">
+              3
+            </span>
+          </Button>
+
+          {/* Wallet Connection */}
+          {isConnected ? (
+            <div className="flex items-center gap-3">
+              <div className="glass-card px-4 py-2 flex items-center gap-3">
+                <div className="h-2 w-2 rounded-full bg-success animate-pulse" />
+                <div className="text-right">
+                  <p className="text-xs text-muted-foreground">Balance</p>
+                  <p className="text-sm font-medium">{balance} ETH</p>
+                </div>
+                <div className="h-8 w-px bg-border" />
+                <p className="text-sm font-mono">{address}</p>
+              </div>
+              <Button variant="ghost" size="icon" onClick={disconnectWallet}>
+                <LogOut className="h-4 w-4" />
+              </Button>
+            </div>
+          ) : (
+            <Button variant="gradient" onClick={connectWallet}>
+              <Wallet className="h-4 w-4" />
+              Connect Wallet
+            </Button>
+          )}
+        </div>
+      </div>
+    </header>
+  );
+};
