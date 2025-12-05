@@ -1,25 +1,49 @@
 import { Button } from '@/components/ui/button';
 import { useWallet } from '@/contexts/WalletContext';
 import { Wallet, LogOut, Bell } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
+
+const getPageTitle = (pathname: string) => {
+  switch (pathname) {
+    case '/':
+      return 'Home';
+    case '/dashboard':
+      return 'Dashboard';
+    case '/create-plan':
+      return 'Create Plan';
+    case '/rebalancer':
+      return 'Rebalancer';
+    case '/delegation':
+      return 'Delegation';
+    case '/settings':
+      return 'Settings';
+    default:
+      return 'Home';
+  }
+};
 
 export const Header = () => {
-  const { isConnected, address, balance, connectWallet, disconnectWallet } = useWallet();
+  const { isConnected, address, balance, connectWallet, disconnectWallet, isLoading } = useWallet();
+  const location = useLocation();
+  const pageTitle = getPageTitle(location.pathname);
 
   return (
     <header className="sticky top-0 z-30 h-16 border-b border-border bg-background/80 backdrop-blur-xl">
       <div className="flex h-full items-center justify-between px-6">
         <div className="flex items-center gap-4">
-          <h1 className="text-lg font-semibold text-foreground">Dashboard</h1>
+          <h1 className="text-lg font-semibold text-foreground">{pageTitle}</h1>
         </div>
 
         <div className="flex items-center gap-4">
-          {/* Notifications */}
-          <Button variant="ghost" size="icon" className="relative">
-            <Bell className="h-5 w-5" />
-            <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-primary text-[10px] font-bold flex items-center justify-center text-primary-foreground">
-              3
-            </span>
-          </Button>
+          {/* Notifications - only show when wallet is connected */}
+          {isConnected && (
+            <Button variant="ghost" size="icon" className="relative">
+              <Bell className="h-5 w-5" />
+              <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-primary text-[10px] font-bold flex items-center justify-center text-primary-foreground">
+                3
+              </span>
+            </Button>
+          )}
 
           {/* Wallet Connection */}
           {isConnected ? (
@@ -38,9 +62,13 @@ export const Header = () => {
               </Button>
             </div>
           ) : (
-            <Button variant="gradient" onClick={connectWallet}>
+            <Button 
+              variant="gradient" 
+              onClick={connectWallet}
+              disabled={isLoading}
+            >
               <Wallet className="h-4 w-4" />
-              Connect Wallet
+              {isLoading ? 'Connecting...' : 'Connect Wallet'}
             </Button>
           )}
         </div>
