@@ -1,4 +1,5 @@
 import { StatCard } from '@/components/cards/StatCard';
+import { BackendStatus } from '@/components/BackendStatus';
 import { Button } from '@/components/ui/button';
 import { 
   Activity, 
@@ -75,6 +76,30 @@ export const Dashboard = () => {
         {stats.map((stat) => (
           <StatCard key={stat.title} {...stat} />
         ))}
+      </div>
+
+      {/* Backend Status Section */}
+      <div className="grid md:grid-cols-3 gap-6">
+        <BackendStatus />
+        <div className="md:col-span-2">
+          <div className="glass-card p-6">
+            <h2 className="text-xl font-display font-semibold mb-4">System Status</h2>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-muted-foreground">Frontend</span>
+                <span className="text-sm font-medium text-green-600">✅ Connected</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-muted-foreground">MetaMask</span>
+                <span className="text-sm font-medium text-green-600">✅ Connected</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-muted-foreground">Scheduler</span>
+                <span className="text-sm font-medium text-yellow-600">⏸️ Development Mode</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Chart Section */}

@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { useWallet } from '@/contexts/WalletContext';
 import { useNavigate } from 'react-router-dom';
+import { BackendStatus } from '@/components/BackendStatus';
 import { Wallet, Zap, Shield, Clock, ArrowRight, CheckCircle, TrendingUp, BarChart3, DollarSign, Users, Star, Github, Twitter } from 'lucide-react';
 import { useState, useEffect } from 'react';
 

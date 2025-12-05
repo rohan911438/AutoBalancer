@@ -71,6 +71,16 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         const account = accounts[0];
         const balance = await getBalance(account);
         
+        // Notify backend about wallet connection
+        try {
+          const { apiService } = await import('../services/api');
+          await apiService.connectWallet(account);
+          console.log('✅ Backend notified of wallet connection');
+        } catch (error) {
+          console.warn('⚠️ Failed to notify backend of wallet connection:', error);
+          // Continue with frontend connection even if backend fails
+        }
+        
         setIsConnected(true);
         setAddress(formatAddress(account));
         setBalance(balance);
