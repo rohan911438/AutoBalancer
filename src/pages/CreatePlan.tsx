@@ -12,11 +12,11 @@ import {
 } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { useToast } from '@/hooks/use-toast';
+// import { useToast } from '@/hooks/use-toast';
 import { ArrowRight, Shield, Zap, Info, Wallet, CheckCircle2, AlertTriangle } from 'lucide-react';
-import { useWallet } from '@/contexts/WalletContext';
-import { PermissionRequestCard } from '@/components/permissions/PermissionRequestCard';
-import { PermissionStatusCard } from '@/components/permissions/PermissionStatusCard';
+// import { useWallet } from '@/contexts/WalletContext';
+// import { PermissionRequestCard } from '@/components/permissions/PermissionRequestCard';
+// import { PermissionStatusCard } from '@/components/permissions/PermissionStatusCard';
 import { DCAPermissionConfig } from '@/types/permissions';
 
 // Token addresses (mainnet - update for your target network)

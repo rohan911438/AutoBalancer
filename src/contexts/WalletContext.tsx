@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import { PermissionStatus } from '../types/permissions';
 
 // Temporary fix - creating a minimal wallet context to fix the syntax errors
 interface WalletContextType {
@@ -16,7 +17,7 @@ interface WalletContextType {
   requestPermission: (params: any) => Promise<any>;
   revokePermission: (permissionId: string) => Promise<boolean>;
   getUserPermissions: () => any[];
-  checkPermissionStatus: (permissionId: string) => string;
+  checkPermissionStatus: (permissionId: string) => PermissionStatus;
   refreshPermissions: () => void;
 }
 
@@ -116,7 +117,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     return [];
   }, []);
 
-  const checkPermissionStatus = useCallback((permissionId: string) => {
+  const checkPermissionStatus = useCallback((permissionId: string): PermissionStatus => {
     return 'revoked';
   }, []);
 

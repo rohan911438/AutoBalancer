@@ -45,7 +45,7 @@ const HomeLayout = React.lazy(() =>
 // Pages
 const Home = React.lazy(() => import("./pages/Home").catch(() => ({ default: () => <div>Home page unavailable</div> })));
 const Dashboard = React.lazy(() => import("./pages/Dashboard").catch(() => ({ default: () => <div>Dashboard unavailable</div> })));
-const CreatePlan = React.lazy(() => import("./pages/CreatePlan").catch(() => ({ default: () => <div>Create Plan unavailable</div> })));
+const CreatePlan = React.lazy(() => import("./pages/CreatePlanNew").catch(() => ({ default: () => <div>Create Plan unavailable</div> })));
 const Rebalancer = React.lazy(() => import("./pages/Rebalancer").catch(() => ({ default: () => <div>Rebalancer unavailable</div> })));
 const Delegation = React.lazy(() => import("./pages/Delegation").catch(() => ({ default: () => <div>Delegation unavailable</div> })));
 const Settings = React.lazy(() => import("./pages/Settings").catch(() => ({ default: () => <div>Settings unavailable</div> })));

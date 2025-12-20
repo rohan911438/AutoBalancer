@@ -114,7 +114,7 @@ export const PermissionStatusCard: React.FC<PermissionStatusCardProps> = ({
           </div>
           <Badge variant={getStatusColor(currentStatus)} className="flex items-center gap-1">
             {getStatusIcon(currentStatus)}
-            {currentStatus.charAt(0).toUpperCase() + currentStatus.slice(1)}
+            {(currentStatus as string).charAt(0).toUpperCase() + (currentStatus as string).slice(1)}
           </Badge>
         </CardTitle>
         <CardDescription>
@@ -176,7 +176,7 @@ export const PermissionStatusCard: React.FC<PermissionStatusCardProps> = ({
         {/* Actions */}
         {showActions && (
           <div className="flex gap-2 pt-2">
-            {currentStatus === 'granted' && (
+            {(currentStatus as string) === 'granted' && (
               <Button
                 variant="destructive"
                 size="sm"

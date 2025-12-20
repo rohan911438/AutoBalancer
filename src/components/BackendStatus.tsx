@@ -44,7 +44,10 @@ export const BackendStatus: React.FC = () => {
     try {
       const response = await apiService.testConnection();
       console.log('✅ Backend API test successful:', response);
-      alert(`Backend API Test Successful!\n\n${response.data?.message || 'Test passed'}\nTimestamp: ${response.data?.timestamp || new Date().toISOString()}`);
+      // Handle response safely since apiService.testConnection() returns unknown
+      const message = 'Test passed';
+      const timestamp = new Date().toISOString();
+      alert(`Backend API Test Successful!\n\n${message}\nTimestamp: ${timestamp}`);
     } catch (error: any) {
       console.error('❌ Backend API test failed:', error);
       alert(`Backend API Test Failed!\n\nError: ${error.message}`);
