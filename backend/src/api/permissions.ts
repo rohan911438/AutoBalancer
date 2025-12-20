@@ -93,7 +93,7 @@ router.get('/:userAddress', async (req, res) => {
       active: summary.active
     });
 
-    res.json({
+    return res.json({
       success: true,
       data: {
         permissions: enhancedPermissions,
@@ -103,7 +103,7 @@ router.get('/:userAddress', async (req, res) => {
 
   } catch (error) {
     logger.error('❌ Failed to retrieve permission metadata:', error);
-    res.status(500).json({
+    return res.status(500).json({
       error: 'Internal server error',
       message: 'Failed to retrieve permission metadata'
     });
@@ -176,7 +176,7 @@ router.get('/permission/:permissionId/status', async (req, res) => {
       isActive: dbPermission.isActive
     };
 
-    res.json({
+    return res.json({
       success: true,
       data: {
         permissionId,
@@ -187,7 +187,7 @@ router.get('/permission/:permissionId/status', async (req, res) => {
 
   } catch (error) {
     logger.error('❌ Failed to get permission status:', error);
-    res.status(500).json({
+    return res.status(500).json({
       error: 'Internal server error',
       message: 'Failed to retrieve permission status'
     });
@@ -245,14 +245,14 @@ router.get('/check/:permissionId/:amount', async (req, res) => {
           : 'Permission check failed'
     };
 
-    res.json({
+    return res.json({
       success: true,
       data: checkResult
     });
 
   } catch (error) {
     logger.error('❌ Failed to check permission:', error);
-    res.status(500).json({
+    return res.status(500).json({
       error: 'Internal server error',
       message: 'Failed to check permission'
     });

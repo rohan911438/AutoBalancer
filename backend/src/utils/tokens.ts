@@ -91,6 +91,11 @@ export async function getTokenInfo(tokenAddress: string): Promise<TokenInfo> {
 
     const contract = new ethers.Contract(tokenAddress, ERC20_ABI, provider);
     
+    // Validate contract methods exist
+    if (!contract['name'] || !contract['symbol'] || !contract['decimals']) {
+      throw new Error(`Invalid ERC20 contract interface for token ${tokenAddress}`);
+    }
+    
     const [name, symbol, decimals] = await Promise.all([
       contract['name'](),
       contract['symbol'](),
@@ -124,6 +129,12 @@ export async function getTokenBalance(tokenAddress: string, userAddress: string)
     }
 
     const contract = new ethers.Contract(tokenAddress, ERC20_ABI, provider);
+    
+    // Validate contract method exists
+    if (!contract['balanceOf']) {
+      throw new Error(`Invalid ERC20 contract interface for token ${tokenAddress}`);
+    }
+    
     return await contract['balanceOf'](userAddress);
   } catch (error) {
     logger.error('Failed to get token balance', { error, tokenAddress, userAddress });

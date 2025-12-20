@@ -125,7 +125,7 @@ router.post('/', async (req, res) => {
       period
     });
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       data: {
         plan: createdPlan
@@ -134,7 +134,7 @@ router.post('/', async (req, res) => {
 
   } catch (error) {
     logger.error('❌ Failed to create DCA plan:', error);
-    res.status(500).json({
+    return res.status(500).json({
       error: 'Internal server error',
       message: 'Failed to create DCA plan'
     });
@@ -181,7 +181,7 @@ router.get('/:userAddress', async (req, res) => {
       activeFilter: isActiveFilter
     });
 
-    res.json({
+    return res.json({
       success: true,
       data: {
         plans: paginatedPlans,
@@ -196,7 +196,7 @@ router.get('/:userAddress', async (req, res) => {
 
   } catch (error) {
     logger.error('❌ Failed to retrieve DCA plans:', error);
-    res.status(500).json({
+    return res.status(500).json({
       error: 'Internal server error',
       message: 'Failed to retrieve DCA plans'
     });
@@ -222,7 +222,7 @@ router.get('/plan/:planId', async (req, res) => {
 
     logger.info('📄 Retrieved DCA plan', { planId });
 
-    res.json({
+    return res.json({
       success: true,
       data: {
         plan
@@ -231,7 +231,7 @@ router.get('/plan/:planId', async (req, res) => {
 
   } catch (error) {
     logger.error('❌ Failed to retrieve DCA plan:', error);
-    res.status(500).json({
+    return res.status(500).json({
       error: 'Internal server error',
       message: 'Failed to retrieve DCA plan'
     });
@@ -278,7 +278,7 @@ router.put('/:planId', async (req, res) => {
       updatedFields: Object.keys(updateData)
     });
 
-    res.json({
+    return res.json({
       success: true,
       data: {
         plan: updatedPlan
@@ -287,7 +287,7 @@ router.put('/:planId', async (req, res) => {
 
   } catch (error) {
     logger.error('❌ Failed to update DCA plan:', error);
-    res.status(500).json({
+    return res.status(500).json({
       error: 'Internal server error',
       message: 'Failed to update DCA plan'
     });
@@ -317,12 +317,12 @@ router.delete('/:planId', async (req, res) => {
     if (deleted) {
       logger.info('🗑️ DCA plan deleted', { planId });
 
-      res.json({
+      return res.json({
         success: true,
         message: 'DCA plan deleted successfully'
       });
     } else {
-      res.status(500).json({
+      return res.status(500).json({
         error: 'Failed to delete plan',
         message: 'Plan deletion failed'
       });
@@ -330,7 +330,7 @@ router.delete('/:planId', async (req, res) => {
 
   } catch (error) {
     logger.error('❌ Failed to delete DCA plan:', error);
-    res.status(500).json({
+    return res.status(500).json({
       error: 'Internal server error',
       message: 'Failed to delete DCA plan'
     });
@@ -356,7 +356,7 @@ router.post('/:planId/pause', async (req, res) => {
 
     logger.info('⏸️ DCA plan paused', { planId });
 
-    res.json({
+    return res.json({
       success: true,
       message: 'DCA plan paused successfully',
       data: {
@@ -366,7 +366,7 @@ router.post('/:planId/pause', async (req, res) => {
 
   } catch (error) {
     logger.error('❌ Failed to pause DCA plan:', error);
-    res.status(500).json({
+    return res.status(500).json({
       error: 'Internal server error',
       message: 'Failed to pause DCA plan'
     });
@@ -392,7 +392,7 @@ router.post('/:planId/resume', async (req, res) => {
 
     logger.info('▶️ DCA plan resumed', { planId });
 
-    res.json({
+    return res.json({
       success: true,
       message: 'DCA plan resumed successfully',
       data: {
@@ -402,7 +402,7 @@ router.post('/:planId/resume', async (req, res) => {
 
   } catch (error) {
     logger.error('❌ Failed to resume DCA plan:', error);
-    res.status(500).json({
+    return res.status(500).json({
       error: 'Internal server error',
       message: 'Failed to resume DCA plan'
     });

@@ -48,7 +48,7 @@ router.post('/', async (req, res) => {
         });
       }
       
-      const value = parseInt(match[1], 10);
+      const value = parseInt(match[1]!, 10);
       const unit = match[2];
       
       switch (unit) {
@@ -105,7 +105,7 @@ router.post('/', async (req, res) => {
       userAddress
     });
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       data: {
         permissionId: result.permissionId,
@@ -116,7 +116,7 @@ router.post('/', async (req, res) => {
 
   } catch (error) {
     logger.error('❌ Failed to delegate permission:', error);
-    res.status(500).json({
+    return res.status(500).json({
       error: 'Delegation failed',
       message: error instanceof Error ? error.message : 'Unknown error occurred'
     });
@@ -160,7 +160,7 @@ router.post('/:permissionId/revoke', async (req, res) => {
       txHash
     });
 
-    res.json({
+    return res.json({
       success: true,
       data: {
         permissionId,
@@ -171,7 +171,7 @@ router.post('/:permissionId/revoke', async (req, res) => {
 
   } catch (error) {
     logger.error('❌ Failed to revoke permission:', error);
-    res.status(500).json({
+    return res.status(500).json({
       error: 'Revocation failed',
       message: error instanceof Error ? error.message : 'Unknown error occurred'
     });
@@ -209,7 +209,7 @@ router.get('/:userAddress/permissions', async (req, res) => {
       contractCount: contractPermissions.length
     });
 
-    res.json({
+    return res.json({
       success: true,
       data: {
         permissions,
@@ -219,7 +219,7 @@ router.get('/:userAddress/permissions', async (req, res) => {
 
   } catch (error) {
     logger.error('❌ Failed to retrieve permissions:', error);
-    res.status(500).json({
+    return res.status(500).json({
       error: 'Internal server error',
       message: 'Failed to retrieve permissions'
     });
@@ -258,7 +258,7 @@ router.get('/permission/:permissionId', async (req, res) => {
       });
     }
 
-    res.json({
+    return res.json({
       success: true,
       data: {
         database: dbPermission,
@@ -274,7 +274,7 @@ router.get('/permission/:permissionId', async (req, res) => {
 
   } catch (error) {
     logger.error('❌ Failed to retrieve permission info:', error);
-    res.status(500).json({
+    return res.status(500).json({
       error: 'Internal server error',
       message: 'Failed to retrieve permission information'
     });

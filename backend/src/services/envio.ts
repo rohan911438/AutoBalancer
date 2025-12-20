@@ -293,7 +293,7 @@ export async function logExecutionToEnvio(executionLog: ExecutionLog): Promise<b
       executionType: executionLog.type,
       gasUsed: executionLog.gasUsed,
       status: executionLog.status,
-      errorMessage: executionLog.errorMessage
+      ...(executionLog.errorMessage && { errorMessage: executionLog.errorMessage })
     };
 
     // Add type-specific data

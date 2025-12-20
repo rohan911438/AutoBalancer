@@ -96,7 +96,7 @@ router.post('/', async (req, res) => {
       threshold: rebalanceThreshold
     });
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       data: {
         config: createdConfig
@@ -105,7 +105,7 @@ router.post('/', async (req, res) => {
 
   } catch (error) {
     logger.error('❌ Failed to create rebalancer config:', error);
-    res.status(500).json({
+    return res.status(500).json({
       error: 'Internal server error',
       message: 'Failed to create rebalancer configuration'
     });
@@ -129,7 +129,7 @@ router.get('/:userAddress', async (req, res) => {
     const configs = await database.getRebalancerConfigs(userAddress);
     const activeConfig = configs.find(config => config.isActive);
 
-    res.json({
+    return res.json({
       success: true,
       data: {
         config: activeConfig || null,
@@ -139,7 +139,7 @@ router.get('/:userAddress', async (req, res) => {
 
   } catch (error) {
     logger.error('❌ Failed to retrieve rebalancer config:', error);
-    res.status(500).json({
+    return res.status(500).json({
       error: 'Internal server error',
       message: 'Failed to retrieve rebalancer configuration'
     });
@@ -177,7 +177,7 @@ router.put('/:configId', async (req, res) => {
       updatedFields: Object.keys(value)
     });
 
-    res.json({
+    return res.json({
       success: true,
       data: {
         config: updatedConfig
@@ -186,7 +186,7 @@ router.put('/:configId', async (req, res) => {
 
   } catch (error) {
     logger.error('❌ Failed to update rebalancer config:', error);
-    res.status(500).json({
+    return res.status(500).json({
       error: 'Internal server error',
       message: 'Failed to update rebalancer configuration'
     });
@@ -213,12 +213,12 @@ router.delete('/:configId', async (req, res) => {
 
     if (deleted) {
       logger.info('🗑️ Rebalancer config deleted', { configId });
-      res.json({
+      return res.json({
         success: true,
         message: 'Rebalancer configuration deleted successfully'
       });
     } else {
-      res.status(500).json({
+      return res.status(500).json({
         error: 'Failed to delete config',
         message: 'Configuration deletion failed'
       });
@@ -226,7 +226,7 @@ router.delete('/:configId', async (req, res) => {
 
   } catch (error) {
     logger.error('❌ Failed to delete rebalancer config:', error);
-    res.status(500).json({
+    return res.status(500).json({
       error: 'Internal server error',
       message: 'Failed to delete rebalancer configuration'
     });
