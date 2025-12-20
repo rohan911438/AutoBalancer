@@ -1,4 +1,11 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import { permissionManager } from '../services/permissions';
+import { 
+  PermissionMetadata, 
+  PermissionRequestParams, 
+  PermissionRequestResult,
+  PermissionStatus 
+} from '../types/permissions';
 
 // Extend the Window interface to include ethereum
 declare global {
@@ -10,10 +17,20 @@ declare global {
 interface WalletContextType {
   isConnected: boolean;
   address: string | null;
+  rawAddress: string | null; // Unformatted address for API calls
   balance: string;
   connectWallet: () => Promise<void>;
   disconnectWallet: () => void;
   isLoading: boolean;
+  
+  // Permission management
+  permissions: Record<string, PermissionMetadata>;
+  isRequestingPermission: boolean;
+  requestPermission: (params: PermissionRequestParams) => Promise<PermissionRequestResult>;
+  revokePermission: (permissionId: string) => Promise<boolean>;
+  getUserPermissions: () => PermissionMetadata[];
+  checkPermissionStatus: (permissionId: string) => PermissionStatus;
+  refreshPermissions: () => void;
 }
 
 const WalletContext = createContext<WalletContextType | undefined>(undefined);
@@ -21,8 +38,13 @@ const WalletContext = createContext<WalletContextType | undefined>(undefined);
 export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isConnected, setIsConnected] = useState(false);
   const [address, setAddress] = useState<string | null>(null);
+  const [rawAddress, setRawAddress] = useState<string | null>(null);
   const [balance, setBalance] = useState('0.00');
   const [isLoading, setIsLoading] = useState(false);
+  
+  // Permission management state
+  const [permissions, setPermissions] = useState<Record<string, PermissionMetadata>>({});
+  const [isRequestingPermission, setIsRequestingPermission] = useState(false);
 
   // Check if MetaMask is installed
   const isMetaMaskInstalled = () => {
@@ -51,6 +73,110 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
     return '0.0000';
   };
+
+  // Load user permissions from storage
+  const loadUserPermissions = useCallback((userAddress: string) => {
+    try {
+      const userPermissions = permissionManager.getUserPermissions(userAddress);
+      const permissionMap: Record<string, PermissionMetadata> = {};
+      userPermissions.forEach(permission => {
+        permissionMap[permission.id] = permission;
+      });
+      setPermissions(permissionMap);
+    } catch (error) {
+      console.error('Failed to load user permissions:', error);
+    }
+  }, []);
+
+  // Request a new permission
+  const requestPermission = useCallback(async (params: PermissionRequestParams): Promise<PermissionRequestResult> => {
+    if (!rawAddress) {
+      return {
+        success: false,
+        error: 'Wallet not connected'
+      };
+    }
+
+    setIsRequestingPermission(true);
+
+    try {
+      // Add user address to the config if not present
+      if (!params.config.userAddress) {
+        params.config.userAddress = rawAddress;
+      }
+
+      const result = await permissionManager.requestPermission(params);
+      
+      if (result.success && result.metadata) {
+        // Update local state with new permission
+        setPermissions(prev => ({
+          ...prev,
+          [result.metadata!.id]: result.metadata!
+        }));
+      }
+
+      return result;
+    } catch (error) {
+      console.error('Permission request failed:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Permission request failed'
+      };
+    } finally {
+      setIsRequestingPermission(false);
+    }
+  }, [rawAddress]);
+
+  // Revoke a permission
+  const revokePermission = useCallback(async (permissionId: string): Promise<boolean> => {
+    try {
+      const success = await permissionManager.revokePermission(permissionId);
+      
+      if (success) {
+        // Update local state
+        setPermissions(prev => ({
+          ...prev,
+          [permissionId]: {
+            ...prev[permissionId],
+            status: 'revoked' as PermissionStatus
+          }
+        }));
+      }
+
+      return success;
+    } catch (error) {
+      console.error('Permission revocation failed:', error);
+      return false;
+    }
+  }, []);
+
+  // Get user permissions
+  const getUserPermissions = useCallback((): PermissionMetadata[] => {
+    return Object.values(permissions);
+  }, [permissions]);
+
+  // Check permission status
+  const checkPermissionStatus = useCallback((permissionId: string): PermissionStatus => {
+    const permission = permissions[permissionId];
+    if (!permission) return 'denied';
+
+    const validation = permissionManager.validatePermission(permissionId);
+    if (!validation.isValid) {
+      if (validation.reason?.includes('expired')) return 'expired';
+      if (validation.reason?.includes('revoked')) return 'revoked';
+      if (validation.reason?.includes('exhausted')) return 'exhausted';
+      return 'denied';
+    }
+
+    return permission.status;
+  }, [permissions]);
+
+  // Refresh permissions from storage
+  const refreshPermissions = useCallback(() => {
+    if (rawAddress) {
+      loadUserPermissions(rawAddress);
+    }
+  }, [rawAddress, loadUserPermissions]);
 
   const connectWallet = useCallback(async () => {
     if (!isMetaMaskInstalled()) {
@@ -83,7 +209,11 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         
         setIsConnected(true);
         setAddress(formatAddress(account));
+        setRawAddress(account);
         setBalance(balance);
+        
+        // Load user permissions
+        loadUserPermissions(account);
         
         // Store connection state
         localStorage.setItem('walletConnected', 'true');
@@ -104,7 +234,9 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const disconnectWallet = useCallback(() => {
     setIsConnected(false);
     setAddress(null);
+    setRawAddress(null);
     setBalance('0.00');
+    setPermissions({});
     
     // Clear stored connection state
     localStorage.removeItem('walletConnected');
@@ -126,7 +258,11 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
             
             setIsConnected(true);
             setAddress(formatAddress(account));
+            setRawAddress(account);
             setBalance(balance);
+            
+            // Load user permissions
+            loadUserPermissions(account);
           } else {
             // Clear stored state if no accounts
             localStorage.removeItem('walletConnected');
@@ -139,7 +275,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     };
 
     checkConnection();
-  }, []);
+  }, [loadUserPermissions]);
 
   // Listen for account changes
   useEffect(() => {
@@ -169,7 +305,22 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   }, [connectWallet, disconnectWallet]);
 
   return (
-    <WalletContext.Provider value={{ isConnected, address, balance, connectWallet, disconnectWallet, isLoading }}>
+    <WalletContext.Provider value={{ 
+      isConnected, 
+      address, 
+      rawAddress,
+      balance, 
+      connectWallet, 
+      disconnectWallet, 
+      isLoading,
+      permissions,
+      isRequestingPermission,
+      requestPermission,
+      revokePermission,
+      getUserPermissions,
+      checkPermissionStatus,
+      refreshPermissions
+    }}>
       {children}
     </WalletContext.Provider>
   );

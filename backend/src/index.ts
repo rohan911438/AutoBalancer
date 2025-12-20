@@ -4,7 +4,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import { config, isDevelopment } from './config';
 import { logger } from './utils/logger';
-import { schedulerService } from './services/scheduler';
+import { SchedulerService } from './services/scheduler';
 
 // Import API routes
 import plansRouter from './api/plans';
@@ -59,7 +59,7 @@ class AutoBalancerServer {
   private setupRoutes(): void {
     // Health check endpoint
     this.app.get('/health', (req, res) => {
-      const healthData = schedulerService.healthCheck();
+      const healthData = this.schedulerService.healthCheck();
       res.json({
         status: healthData.status,
         timestamp: new Date().toISOString(),
@@ -69,9 +69,19 @@ class AutoBalancerServer {
       });
     });
 
+    // Simple test endpoint
+    this.app.get('/api/test', (req, res) => {
+      res.json({
+        success: true,
+        message: 'Backend API is working correctly!',
+        timestamp: new Date().toISOString(),
+        environment: config.nodeEnv
+      });
+    });
+
     // Scheduler status endpoint
     this.app.get('/api/scheduler/status', (req, res) => {
-      const stats = schedulerService.getStats();
+      const stats = this.schedulerService.getStats();
       res.json({
         success: true,
         data: stats
@@ -82,7 +92,7 @@ class AutoBalancerServer {
     if (isDevelopment) {
       this.app.post('/api/scheduler/execute', async (req, res) => {
         try {
-          await schedulerService.forceExecution();
+          await this.schedulerService.forceExecution();
           res.json({
             success: true,
             message: 'Scheduler execution triggered manually'
@@ -147,7 +157,7 @@ class AutoBalancerServer {
       });
 
       // Start the automated scheduler
-      await schedulerService.start();
+      await this.schedulerService.start();
       logger.info('⏰ Automated scheduler started');
 
     } catch (error) {
@@ -163,7 +173,7 @@ class AutoBalancerServer {
     logger.info('🛑 Shutting down AutoBalancer Backend...');
     
     try {
-      await schedulerService.stop();
+      await this.schedulerService.stop();
       logger.info('✅ Scheduler stopped');
       
       // Give time for pending requests to complete

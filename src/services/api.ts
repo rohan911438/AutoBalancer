@@ -1,11 +1,12 @@
 // API Configuration for AutoBalancer Frontend
 const API_BASE_URL = 'http://localhost:3001/api';
+const BASE_URL = 'http://localhost:3001';
 
 /**
  * API endpoints configuration
  */
 export const API_ENDPOINTS = {
-  // Health check
+  // Health check (not under /api)
   HEALTH: '/health',
   
   // Test endpoint
@@ -117,7 +118,13 @@ export const apiClient = new ApiClient();
 export const apiService = {
   // Health check
   async healthCheck() {
-    return apiClient.get(API_ENDPOINTS.HEALTH);
+    // Health endpoint is at base URL, not API base URL
+    const url = `${BASE_URL}${API_ENDPOINTS.HEALTH}`;
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+    return await response.json();
   },
 
   // Test backend connection
