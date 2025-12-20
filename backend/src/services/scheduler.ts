@@ -100,7 +100,7 @@ export class SchedulerService {
       }
 
       if (this.cronJob) {
-        this.cronJob.destroy();
+        this.cronJob.stop();
         this.cronJob = null;
       }
 
@@ -123,8 +123,8 @@ export class SchedulerService {
    */
   private async executeScheduledTasks(): Promise<void> {
     const startTime = Date.now();
-    let dcaResults = [];
-    let rebalanceResults = [];
+    let dcaResults: any[] = [];
+    let rebalanceResults: any[] = [];
     let hasErrors = false;
 
     try {
@@ -216,7 +216,7 @@ export class SchedulerService {
 
     // Stop scheduler temporarily
     if (this.cronJob) {
-      this.cronJob.destroy();
+      this.cronJob.stop();
       this.cronJob = null;
     }
 

@@ -22,12 +22,12 @@ export const BackendStatus: React.FC = () => {
   const checkBackendConnection = async () => {
     setIsLoading(true);
     try {
-      const response: ApiResponse = await apiService.healthCheck();
+      const response = await apiService.healthCheck();
       setBackendStatus({
         isConnected: true,
-        status: response.status,
-        environment: response.environment,
-        timestamp: response.timestamp
+        status: response.data?.status || 'healthy',
+        environment: response.data?.environment || 'development',
+        timestamp: response.data?.timestamp
       });
     } catch (error: any) {
       setBackendStatus({
@@ -42,9 +42,9 @@ export const BackendStatus: React.FC = () => {
   const testApiEndpoint = async () => {
     setIsLoading(true);
     try {
-      const response: ApiResponse = await apiService.testConnection();
+      const response = await apiService.testConnection();
       console.log('✅ Backend API test successful:', response);
-      alert(`Backend API Test Successful!\n\n${response.message}\nTimestamp: ${response.timestamp}`);
+      alert(`Backend API Test Successful!\n\n${response.data?.message || 'Test passed'}\nTimestamp: ${response.data?.timestamp || new Date().toISOString()}`);
     } catch (error: any) {
       console.error('❌ Backend API test failed:', error);
       alert(`Backend API Test Failed!\n\nError: ${error.message}`);

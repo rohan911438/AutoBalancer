@@ -92,9 +92,9 @@ export async function getTokenInfo(tokenAddress: string): Promise<TokenInfo> {
     const contract = new ethers.Contract(tokenAddress, ERC20_ABI, provider);
     
     const [name, symbol, decimals] = await Promise.all([
-      contract.name(),
-      contract.symbol(),
-      contract.decimals()
+      contract['name'](),
+      contract['symbol'](),
+      contract['decimals']()
     ]);
 
     return {
@@ -124,7 +124,7 @@ export async function getTokenBalance(tokenAddress: string, userAddress: string)
     }
 
     const contract = new ethers.Contract(tokenAddress, ERC20_ABI, provider);
-    return await contract.balanceOf(userAddress);
+    return await contract['balanceOf'](userAddress);
   } catch (error) {
     logger.error('Failed to get token balance', { error, tokenAddress, userAddress });
     throw new Error(`Failed to get balance for token ${tokenAddress}`);

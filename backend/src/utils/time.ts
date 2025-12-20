@@ -164,7 +164,7 @@ export function parseDurationToSeconds(duration: string): number {
     throw new Error(`Invalid duration format: ${duration}. Use format like "30d", "12h", "45m"`);
   }
   
-  const value = parseInt(match[1], 10);
+  const value = parseInt(match[1] || '0', 10);
   const unit = match[2];
   
   switch (unit) {

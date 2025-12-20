@@ -105,7 +105,8 @@ export class AgentContract {
         timeWindow: timeWindow.toString()
       });
 
-      const tx = await this.contract.delegatePermission(
+      if (!this.contract) throw new Error('Contract not initialized');
+      const tx = await this.contract['delegatePermission'](
         parentPermissionId,
         delegatee,
         delegatedAllowance,
@@ -160,7 +161,8 @@ export class AgentContract {
         throw new Error('Permission validation failed for DCA execution');
       }
 
-      const tx = await this.contract.executeDCA(
+      if (!this.contract) throw new Error('Contract not initialized');
+      const tx = await this.contract['executeDCA'](
         params.permissionId,
         params.tokenFrom,
         params.tokenTo,
@@ -218,7 +220,8 @@ export class AgentContract {
         throw new Error('Permission validation failed for rebalance execution');
       }
 
-      const tx = await this.contract.executeRebalance(
+      if (!this.contract) throw new Error('Contract not initialized');
+      const tx = await this.contract['executeRebalance'](
         params.permissionId,
         params.tokensFrom,
         params.tokensTo,
@@ -259,7 +262,8 @@ export class AgentContract {
    */
   async checkPermission(permissionId: string, user: string, amount: bigint): Promise<boolean> {
     try {
-      return await this.contract.checkPermission(permissionId, user, amount);
+      if (!this.contract) throw new Error('Contract not initialized');
+      return await this.contract['checkPermission'](permissionId, user, amount);
     } catch (error) {
       logger.error('❌ Failed to check permission', { error, permissionId, user, amount: amount.toString() });
       return false;
@@ -274,7 +278,8 @@ export class AgentContract {
    */
   async getPermissionInfo(permissionId: string): Promise<PermissionInfo> {
     try {
-      const [owner, allowance, spent, resetTime, timeWindow] = await this.contract.getPermissionInfo(permissionId);
+      if (!this.contract) throw new Error('Contract not initialized');
+      const [owner, allowance, spent, resetTime, timeWindow] = await this.contract['getPermissionInfo'](permissionId);
       
       return {
         owner,
@@ -297,7 +302,8 @@ export class AgentContract {
    */
   async getUserPermissions(user: string): Promise<string[]> {
     try {
-      return await this.contract.getUserPermissions(user);
+      if (!this.contract) throw new Error('Contract not initialized');
+      return await this.contract['getUserPermissions'](user);
     } catch (error) {
       logger.error('❌ Failed to get user permissions', { error, user });
       throw error;
@@ -314,7 +320,8 @@ export class AgentContract {
     try {
       logger.info('🚫 Revoking permission', { permissionId });
 
-      const tx = await this.contract.revokePermission(permissionId);
+      if (!this.contract) throw new Error('Contract not initialized');
+      const tx = await this.contract['revokePermission'](permissionId);
       const receipt = await tx.wait();
 
       logger.info('✅ Permission revoked successfully', {

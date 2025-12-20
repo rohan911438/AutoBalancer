@@ -370,6 +370,3 @@ class JsonDatabase {
 
 // Export singleton instance
 export const database = new JsonDatabase();
-
-// Export types
-export type { DcaPlan, RebalancerConfig, PermissionMetadata, ExecutionLog, AssetWeight };

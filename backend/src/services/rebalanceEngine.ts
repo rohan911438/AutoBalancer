@@ -316,14 +316,16 @@ export class RebalanceEngine {
             if (underweightAssets.length > 0) {
               const targetAsset = underweightAssets[0];
               
-              recommendations.push({
-                tokenFrom: asset.tokenAddress,
-                tokenTo: targetAsset.tokenAddress,
-                amountFrom: excessAmount,
-                targetWeight: asset.targetWeight,
-                currentWeight: portfolioItem.currentWeight,
-                deviation
-              });
+              if (targetAsset) {
+                recommendations.push({
+                  tokenFrom: asset.tokenAddress,
+                  tokenTo: targetAsset.tokenAddress,
+                  amountFrom: excessAmount,
+                  targetWeight: asset.targetWeight,
+                  currentWeight: portfolioItem.currentWeight,
+                  deviation
+                });
+              }
             }
           }
         }

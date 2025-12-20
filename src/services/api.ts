@@ -1,6 +1,28 @@
 // API Configuration for AutoBalancer Frontend
-const API_BASE_URL = 'http://localhost:3001/api';
-const BASE_URL = 'http://localhost:3001';
+
+// Safe environment configuration for Vite
+const getApiUrl = () => {
+  try {
+    // Use import.meta.env for Vite compatibility
+    const baseUrl = import.meta.env?.VITE_API_BASE_URL || 'http://localhost:3001';
+    return `${baseUrl}/api`;
+  } catch {
+    return 'http://localhost:3001/api';
+  }
+};
+
+const getBaseUrl = () => {
+  try {
+    return import.meta.env?.VITE_API_BASE_URL || 'http://localhost:3001';
+  } catch {
+    return 'http://localhost:3001';
+  }
+};
+
+const API_BASE_URL = getApiUrl();
+const BASE_URL = getBaseUrl();
+
+console.log('🔧 API Configuration:', { API_BASE_URL, BASE_URL });
 
 /**
  * API endpoints configuration
