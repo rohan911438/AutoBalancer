@@ -75,6 +75,7 @@ A decentralized finance (DeFi) application for automated portfolio balancing and
 - Node.js (>= 18.0.0)
 - npm or bun
 - MetaMask or compatible Web3 wallet
+- Sepolia testnet ETH for testing
 
 ### Installation
 
@@ -99,20 +100,101 @@ npm install
 bun install
 ```
 
+### Environment Setup
+
+#### Backend Configuration
+
+1. Copy the example environment file:
+   ```bash
+   cd backend
+   cp .env.example .env
+   ```
+
+2. Edit `.env` and configure:
+   ```env
+   # Ethereum Configuration - Sepolia Testnet
+   ETHEREUM_RPC_URL=https://sepolia.infura.io/v3/YOUR_INFURA_PROJECT_ID
+   PRIVATE_KEY=your_private_key_here
+   AGENT_CONTRACT_ADDRESS=0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815
+   ```
+
+3. Get a Sepolia RPC URL:
+   - **Infura**: Sign up at [infura.io](https://infura.io), create a project, and use the Sepolia endpoint
+   - **Alchemy**: Sign up at [alchemy.com](https://alchemy.com) and create an app for Sepolia
+
+4. **Important**: Use a test wallet private key with minimal Sepolia ETH. Never use mainnet funds!
+
+#### Frontend Configuration
+
+1. Copy the example environment file:
+   ```bash
+   # From project root
+   cp .env.example .env
+   ```
+
+2. Edit `.env` and configure:
+   ```env
+   # Frontend Configuration
+   VITE_API_BASE_URL=http://localhost:3001
+   VITE_SEPOLIA_RPC_URL=https://sepolia.infura.io/v3/YOUR_INFURA_PROJECT_ID
+   VITE_CONTRACT_ADDRESS=0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815
+   VITE_CHAIN_ID=11155111
+   ```
+
 ### Development
 
 ```bash
-# Start frontend development server
-npm run dev
-# or
-bun run dev
-
-# Start backend server (in separate terminal)
+# Start backend server
 cd backend
 npm run dev
 # or
 bun run dev
+
+# Start frontend development server (in separate terminal)
+cd ..  # back to project root
+npm run dev
+# or
+bun run dev
 ```
+
+### Testing the Contract Integration
+
+Run the integration test to verify everything is working:
+
+```bash
+# Test contract integration
+node test-contract-integration.js
+```
+
+This will test:
+- ✅ Contract connectivity
+- ✅ Environment configuration
+- ✅ ABI compatibility
+- ✅ Basic contract functions
+
+### Wallet Setup
+
+1. **Install MetaMask**: [metamask.io](https://metamask.io)
+
+2. **Add Sepolia Network** to MetaMask:
+   - Network Name: `Sepolia`
+   - RPC URL: `https://sepolia.infura.io/v3/YOUR_PROJECT_ID`
+   - Chain ID: `11155111`
+   - Currency Symbol: `SepoliaETH`
+   - Block Explorer: `https://sepolia.etherscan.io`
+
+3. **Get Sepolia ETH**:
+   - [Sepolia Faucet](https://sepoliafaucet.com/)
+   - [Alchemy Sepolia Faucet](https://sepoliafaucet.com/)
+   - [Chainlink Sepolia Faucet](https://faucets.chain.link/sepolia)
+
+### First Steps
+
+1. **Connect Your Wallet**: Visit the application and connect MetaMask
+2. **Verify Contract**: The app will automatically connect to the deployed contract
+3. **Test DCA**: Create a test DCA plan (simulated for hackathon)
+4. **Test Rebalancing**: Set up portfolio rebalancing targets
+5. **Monitor Events**: Check the console/backend logs for contract events
 
 ### Testing
 

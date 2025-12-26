@@ -1,14 +1,17 @@
 import { ethers, Contract } from 'ethers';
-import { config, signer } from '../config';
-import { logger } from '../utils/logger';
+
+/**
+ * AutoBalancer Agent Contract Configuration
+ * Deployed on Ethereum Sepolia Testnet
+ */
+export const AGENT_CONTRACT_ADDRESS = '0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815';
+export const SEPOLIA_CHAIN_ID = 11155111;
 
 /**
  * AutoBalancer Agent Contract ABI
- * 
- * This ABI matches the deployed AutoBalancerAgent contract on Sepolia
- * Contract Address: 0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815
+ * Matches the deployed contract exactly
  */
-const AGENT_CONTRACT_ABI = [
+export const AGENT_CONTRACT_ABI = [
 	{
 		"anonymous": false,
 		"inputs": [
@@ -523,10 +526,10 @@ const AGENT_CONTRACT_ABI = [
 		"stateMutability": "pure",
 		"type": "function"
 	}
-];
+] as const;
 
 /**
- * Asset weight structure for rebalancing
+ * Type definitions for contract interactions
  */
 export interface AssetWeight {
   token: string;
@@ -535,9 +538,6 @@ export interface AssetWeight {
   targetAmount: bigint;
 }
 
-/**
- * Delegation information structure
- */
 export interface DelegationInfo {
   parentPermissionId: string;
   delegatee: string;
@@ -547,277 +547,177 @@ export interface DelegationInfo {
   createdAt: bigint;
 }
 
-/**
- * DCA execution parameters
- */
-export interface DCAExecutionParams {
-  user: string;
-  tokenFrom: string;
-  tokenTo: string;
-  amount: bigint;
+export interface ContractInfo {
+  name: string;
+  version: string;
+  description: string;
 }
 
 /**
- * Rebalance execution parameters
- */
-export interface RebalanceExecutionParams {
-  user: string;
-  targets: AssetWeight[];
-}
-
-/**
- * Delegation parameters
- */
-export interface DelegationParams {
-  parentPermissionId: string;
-  delegatee: string;
-  allowance: bigint;
-}
-
-/**
- * AutoBalancer Agent Contract Wrapper
- * 
- * Provides TypeScript interface for interacting with the deployed
- * AutoBalancerAgent smart contract for automated trading operations
+ * AgentContract class for frontend interactions
  */
 export class AgentContract {
-  private contract: Contract;
+  private contract: Contract | null = null;
+  private provider: ethers.BrowserProvider | null = null;
+  private signer: ethers.Signer | null = null;
 
   constructor() {
-    this.contract = new ethers.Contract(
-      config.agentContractAddress,
-      AGENT_CONTRACT_ABI,
-      signer
-    );
-    
-    logger.info(`📋 Agent contract initialized at ${config.agentContractAddress}`);
+    // Initialize when needed
+  }
+
+  /**
+   * Initialize the contract with a provider/signer
+   * @param provider - Ethereum provider (from wallet connection)
+   */
+  async initialize(provider: ethers.BrowserProvider) {
+    this.provider = provider;
+    this.signer = await provider.getSigner();
+    this.contract = new ethers.Contract(AGENT_CONTRACT_ADDRESS, AGENT_CONTRACT_ABI, this.signer);
+  }
+
+  /**
+   * Check if contract is initialized
+   */
+  private ensureInitialized() {
+    if (!this.contract) {
+      throw new Error('Contract not initialized. Call initialize() first.');
+    }
   }
 
   /**
    * Get contract information
-   * 
-   * @returns Contract metadata
    */
-  async getContractInfo(): Promise<{ name: string; version: string; description: string }> {
-    try {
-      const [name, version, description] = await this.contract.getContractInfo();
-      return { name, version, description };
-    } catch (error) {
-      logger.error('❌ Failed to get contract info', { error });
-      throw error;
-    }
+  async getContractInfo(): Promise<ContractInfo> {
+    this.ensureInitialized();
+    const [name, version, description] = await this.contract!.getContractInfo();
+    return { name, version, description };
+  }
+
+  /**
+   * Execute DCA (simulation for hackathon)
+   */
+  async executeDCA(
+    user: string,
+    tokenFrom: string,
+    tokenTo: string,
+    amount: bigint
+  ): Promise<{ txHash: string; executionId: string }> {
+    this.ensureInitialized();
+    
+    const tx = await this.contract!.executeDCA(user, tokenFrom, tokenTo, amount);
+    const receipt = await tx.wait();
+    
+    // Extract execution ID from events
+    const event = receipt.logs.find((log: any) => log.fragment?.name === 'DCAExecuted');
+    const executionId = event?.args?.executionId || '';
+    
+    return { txHash: tx.hash, executionId };
+  }
+
+  /**
+   * Execute rebalance (simulation for hackathon)
+   */
+  async executeRebalance(
+    user: string,
+    targets: AssetWeight[]
+  ): Promise<{ txHash: string; executionId: string }> {
+    this.ensureInitialized();
+    
+    const tx = await this.contract!.executeRebalance(user, targets);
+    const receipt = await tx.wait();
+    
+    // Extract execution ID from events
+    const event = receipt.logs.find((log: any) => log.fragment?.name === 'RebalanceExecuted');
+    const executionId = event?.args?.executionId || '';
+    
+    return { txHash: tx.hash, executionId };
   }
 
   /**
    * Delegate permission to another address
-   * 
-   * @param params - Delegation parameters
-   * @returns Transaction hash and delegation ID
    */
-  async delegatePermission(params: DelegationParams): Promise<{ txHash: string; delegationId: string }> {
-    try {
-      logger.info('🔐 Delegating permission', params);
-
-      const tx = await this.contract.delegatePermission(
-        params.parentPermissionId,
-        params.delegatee,
-        params.allowance
-      );
-
-      const receipt = await tx.wait();
-      
-      // Extract delegation ID from event logs
-      const event = receipt.logs.find((log: any) => 
-        log.fragment?.name === 'PermissionDelegated'
-      );
-      
-      const delegationId = event?.args?.delegationId || '';
-
-      logger.info('✅ Permission delegated successfully', {
-        txHash: tx.hash,
-        delegationId,
-        gasUsed: receipt.gasUsed.toString()
-      });
-
-      return { txHash: tx.hash, delegationId };
-    } catch (error) {
-      logger.error('❌ Failed to delegate permission', { error, params });
-      throw error;
-    }
-  }
-
-  /**
-   * Execute a DCA (Dollar Cost Averaging) trade
-   * 
-   * @param params - DCA execution parameters
-   * @returns Transaction hash
-   */
-  async executeDCA(params: DCAExecutionParams): Promise<{ txHash: string; executionId: string }> {
-    try {
-      logger.info('💰 Executing DCA trade', params);
-
-      const tx = await this.contract.executeDCA(
-        params.user,
-        params.tokenFrom,
-        params.tokenTo,
-        params.amount
-      );
-
-      const receipt = await tx.wait();
-      
-      // Extract execution ID from event logs
-      const event = receipt.logs.find((log: any) => 
-        log.fragment?.name === 'DCAExecuted'
-      );
-      
-      const executionId = event?.args?.executionId || '';
-
-      logger.info('✅ DCA executed successfully', {
-        txHash: tx.hash,
-        executionId,
-        gasUsed: receipt.gasUsed.toString()
-      });
-
-      return { txHash: tx.hash, executionId };
-    } catch (error) {
-      logger.error('❌ Failed to execute DCA', { error, params });
-      throw error;
-    }
-  }
-
-  /**
-   * Execute portfolio rebalancing
-   * 
-   * @param params - Rebalance execution parameters
-   * @returns Transaction hash
-   */
-  async executeRebalance(params: RebalanceExecutionParams): Promise<{ txHash: string; executionId: string }> {
-    try {
-      logger.info('⚖️ Executing portfolio rebalance', params);
-
-      const tx = await this.contract.executeRebalance(
-        params.user,
-        params.targets
-      );
-
-      const receipt = await tx.wait();
-      
-      // Extract execution ID from event logs
-      const event = receipt.logs.find((log: any) => 
-        log.fragment?.name === 'RebalanceExecuted'
-      );
-      
-      const executionId = event?.args?.executionId || '';
-
-      logger.info('✅ Rebalance executed successfully', {
-        txHash: tx.hash,
-        executionId,
-        gasUsed: receipt.gasUsed.toString()
-      });
-
-      return { txHash: tx.hash, executionId };
-    } catch (error) {
-      logger.error('❌ Failed to execute rebalance', { error, params });
-      throw error;
-    }
+  async delegatePermission(
+    parentPermissionId: string,
+    delegatee: string,
+    allowance: bigint
+  ): Promise<{ txHash: string; delegationId: string }> {
+    this.ensureInitialized();
+    
+    const tx = await this.contract!.delegatePermission(parentPermissionId, delegatee, allowance);
+    const receipt = await tx.wait();
+    
+    // Extract delegation ID from events
+    const event = receipt.logs.find((log: any) => log.fragment?.name === 'PermissionDelegated');
+    const delegationId = event?.args?.delegationId || '';
+    
+    return { txHash: tx.hash, delegationId };
   }
 
   /**
    * Get delegation information
-   * 
-   * @param delegationId - Delegation ID to query
-   * @returns Delegation information
    */
   async getDelegationInfo(delegationId: string): Promise<DelegationInfo> {
-    try {
-      const result = await this.contract.getDelegationInfo(delegationId);
-      
-      return {
-        parentPermissionId: result.parentPermissionId,
-        delegatee: result.delegatee,
-        allowance: result.allowance,
-        spent: result.spent,
-        isActive: result.isActive,
-        createdAt: result.createdAt
-      };
-    } catch (error) {
-      logger.error('❌ Failed to get delegation info', { error, delegationId });
-      throw error;
-    }
+    this.ensureInitialized();
+    const result = await this.contract!.getDelegationInfo(delegationId);
+    
+    return {
+      parentPermissionId: result.parentPermissionId,
+      delegatee: result.delegatee,
+      allowance: result.allowance,
+      spent: result.spent,
+      isActive: result.isActive,
+      createdAt: result.createdAt
+    };
   }
 
   /**
-   * Check if a delegation has sufficient allowance
-   * 
-   * @param delegationId - Delegation ID to check
-   * @param amount - Amount to check
-   * @returns Whether delegation has sufficient allowance
+   * Check delegation allowance
    */
   async checkDelegationAllowance(delegationId: string, amount: bigint): Promise<boolean> {
-    try {
-      return await this.contract.checkDelegationAllowance(delegationId, amount);
-    } catch (error) {
-      logger.error('❌ Failed to check delegation allowance', { error, delegationId, amount: amount.toString() });
-      return false;
-    }
+    this.ensureInitialized();
+    return await this.contract!.checkDelegationAllowance(delegationId, amount);
   }
 
   /**
    * Get remaining allowance for a delegation
-   * 
-   * @param delegationId - Delegation ID to check
-   * @returns Remaining allowance amount
    */
   async getDelegationRemainingAllowance(delegationId: string): Promise<bigint> {
-    try {
-      return await this.contract.getDelegationRemainingAllowance(delegationId);
-    } catch (error) {
-      logger.error('❌ Failed to get delegation remaining allowance', { error, delegationId });
-      throw error;
-    }
+    this.ensureInitialized();
+    return await this.contract!.getDelegationRemainingAllowance(delegationId);
   }
 
   /**
-   * Use a delegation
-   * 
-   * @param delegationId - Delegation ID to use
-   * @param amount - Amount to use
-   * @returns Transaction hash
+   * Use delegation
    */
   async useDelegation(delegationId: string, amount: bigint): Promise<string> {
-    try {
-      logger.info('🔑 Using delegation', { delegationId, amount: amount.toString() });
-
-      const tx = await this.contract.useDelegation(delegationId, amount);
-      const receipt = await tx.wait();
-
-      logger.info('✅ Delegation used successfully', {
-        txHash: tx.hash,
-        gasUsed: receipt.gasUsed.toString()
-      });
-
-      return tx.hash;
-    } catch (error) {
-      logger.error('❌ Failed to use delegation', { error, delegationId, amount: amount.toString() });
-      throw error;
-    }
+    this.ensureInitialized();
+    const tx = await this.contract!.useDelegation(delegationId, amount);
+    await tx.wait();
+    return tx.hash;
   }
 
   /**
-   * Validate asset weights (check if they sum to 100%)
-   * 
-   * @param targets - Asset weights to validate
-   * @returns Whether weights are valid
+   * Validate asset weights
    */
   async validateAssetWeights(targets: AssetWeight[]): Promise<boolean> {
-    try {
-      return await this.contract.validateAssetWeights(targets);
-    } catch (error) {
-      logger.error('❌ Failed to validate asset weights', { error, targets });
-      return false;
-    }
+    this.ensureInitialized();
+    return await this.contract!.validateAssetWeights(targets);
+  }
+
+  /**
+   * Get the contract address
+   */
+  getContractAddress(): string {
+    return AGENT_CONTRACT_ADDRESS;
+  }
+
+  /**
+   * Get the chain ID
+   */
+  getChainId(): number {
+    return SEPOLIA_CHAIN_ID;
   }
 }
 
-// Export singleton instance
+// Export a singleton instance
 export const agentContract = new AgentContract();

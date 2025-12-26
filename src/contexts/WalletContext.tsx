@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { PermissionStatus } from '../types/permissions';
+import { agentContract } from '../contracts/agentContract';
+import { ethers } from 'ethers';
 
 // Temporary fix - creating a minimal wallet context to fix the syntax errors
 interface WalletContextType {
