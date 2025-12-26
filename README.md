@@ -9,6 +9,7 @@ A decentralized finance (DeFi) application for automated portfolio balancing and
 - **Permission-Based Delegation**: Granular control over automated actions
 - **Cross-Chain Support**: Built for Ethereum with extensibility in mind
 - **Real-time Monitoring**: Track performance and execution logs
+- **Event Indexing**: Comprehensive blockchain event tracking with Envio
 
 ## 📋 Project Information
 
@@ -24,6 +25,33 @@ A decentralized finance (DeFi) application for automated portfolio balancing and
 
 **Deployment Details**:
 - **Deployer**: [`0x5C1bd09568006397316CD56E9D893F95a7b63f9A`](https://sepolia.etherscan.io/address/0x5C1bd09568006397316CD56E9D893F95a7b63f9A)
+
+## 🔍 Event Indexing
+
+### Envio Indexer
+
+The project includes a comprehensive Envio indexer that tracks all contract events for analytics and monitoring:
+
+**Location**: `/envio/`
+
+**Indexed Events**:
+- `DCAExecuted` - DCA strategy executions
+- `RebalanceExecuted` - Portfolio rebalancing operations
+- `PermissionDelegated` - Permission delegation events
+- `DelegationUsed` - Permission usage tracking
+- `AssetRebalanced` - Individual asset movements
+
+**GraphQL API**: Available at `http://localhost:8080` when running locally
+
+**Setup**:
+```bash
+cd envio
+npm install
+npm run local    # Start Docker containers
+npm run dev      # Start indexer
+```
+
+See [envio/README.md](envio/README.md) for detailed setup and usage instructions.
 - **Deployment Transaction**: [`0xbf42576501199b6966dc7d48fa4b28a18677311ef374f30ab57403fb894afbab`](https://sepolia.etherscan.io/tx/0xbf42576501199b6966dc7d48fa4b28a18677311ef374f30ab57403fb894afbab)
 - **Block Number**: 9,911,574
 - **Transaction Index**: 31

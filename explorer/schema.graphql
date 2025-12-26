@@ -1,0 +1,76 @@
+type AssetRebalanced @entity {
+  id: ID!
+  user: Bytes! # address
+  token: Bytes! # address
+  fromAmount: BigInt! # uint256
+  toAmount: BigInt! # uint256
+  action: String! # string
+  executionId: Bytes! # bytes32
+  db_write_timestamp: Int8
+  chain_id: Int!
+  block_number: BigInt!
+  block_timestamp: BigInt!
+  transaction_hash: Bytes!
+  log_index: Int!
+}
+
+type DCAExecuted @entity {
+  id: ID!
+  user: Bytes! # address
+  tokenFrom: Bytes! # address
+  tokenTo: Bytes! # address
+  amount: BigInt! # uint256
+  executedAt: BigInt! # uint256
+  executionId: Bytes! # bytes32
+  db_write_timestamp: Int8
+  chain_id: Int!
+  block_number: BigInt!
+  block_timestamp: BigInt!
+  transaction_hash: Bytes!
+  log_index: Int!
+}
+
+type DelegationUsed @entity {
+  id: ID!
+  delegationId: Bytes! # bytes32
+  delegatee: Bytes! # address
+  amount: BigInt! # uint256
+  remainingAllowance: BigInt! # uint256
+  db_write_timestamp: Int8
+  chain_id: Int!
+  block_number: BigInt!
+  block_timestamp: BigInt!
+  transaction_hash: Bytes!
+  log_index: Int!
+}
+
+type PermissionDelegated @entity {
+  id: ID!
+  parentPermissionId: Bytes! # bytes32
+  delegator: Bytes! # address
+  delegatee: Bytes! # address
+  allowance: BigInt! # uint256
+  delegationId: Bytes! # bytes32
+  createdAt: BigInt! # uint256
+  db_write_timestamp: Int8
+  chain_id: Int!
+  block_number: BigInt!
+  block_timestamp: BigInt!
+  transaction_hash: Bytes!
+  log_index: Int!
+}
+
+type RebalanceExecuted @entity {
+  id: ID!
+  user: Bytes! # address
+  totalAssets: BigInt! # uint256
+  totalValue: BigInt! # uint256
+  executedAt: BigInt! # uint256
+  executionId: Bytes! # bytes32
+  db_write_timestamp: Int8
+  chain_id: Int!
+  block_number: BigInt!
+  block_timestamp: BigInt!
+  transaction_hash: Bytes!
+  log_index: Int!
+}

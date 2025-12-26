@@ -1,0 +1,35 @@
+# yaml-language-server: $schema=./node_modules/envio/evm.schema.json
+name: explorer
+description: Indexer for explorer
+networks:
+  - id: 11155111
+    start_block: 7444444
+    name: sepolia
+    rpc_config:
+      url: https://eth-sepolia.g.alchemy.com/v2/demo
+contracts:
+  - name: AutoBalancerAgent
+    abi_file_path: ./abis/AutoBalancerAgent.json
+    address:
+      - name: AutoBalancerAgent_sepolia
+        address: "0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815"
+        start_block: 7444444
+    events:
+      - event: AssetRebalanced
+      - event: DCAExecuted
+      - event: DelegationUsed
+      - event: PermissionDelegated
+      - event: RebalanceExecuted
+event_handlers:
+  - event: AutoBalancerAgent.AssetRebalanced
+    handler: src/EventHandlers.ts:handleAssetRebalanced
+  - event: AutoBalancerAgent.DCAExecuted
+    handler: src/EventHandlers.ts:handleDCAExecuted
+  - event: AutoBalancerAgent.DelegationUsed
+    handler: src/EventHandlers.ts:handleDelegationUsed
+  - event: AutoBalancerAgent.PermissionDelegated
+    handler: src/EventHandlers.ts:handlePermissionDelegated
+  - event: AutoBalancerAgent.RebalanceExecuted
+    handler: src/EventHandlers.ts:handleRebalanceExecuted
+rollback_on_reorg: false
+save_full_history: false

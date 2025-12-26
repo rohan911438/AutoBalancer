@@ -1,0 +1,35 @@
+{
+  "name": "explorer",
+  "version": "0.1.0",
+  "description": "Envio indexer for AutoBalancer Agent contract explorer",
+  "main": "src/EventHandlers.ts",
+  "scripts": {
+    "dev": "envio dev",
+    "start": "envio start",
+    "stop": "envio stop",
+    "codegen": "envio codegen",
+    "build": "envio build",
+    "test": "envio test",
+    "local": "envio local docker up",
+    "local:down": "envio local docker down"
+  },
+  "keywords": [
+    "envio",
+    "indexer",
+    "autobalancer",
+    "ethereum",
+    "explorer"
+  ],
+  "author": "AutoBalancer Team",
+  "license": "MIT",
+  "dependencies": {
+    "envio": "^2.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -1,0 +1,77 @@
+type DCAExecution @entity {
+  id: ID!
+  user: Bytes! # address
+  tokenFrom: Bytes! # address
+  tokenTo: Bytes! # address
+  amount: BigInt!
+  executedAt: BigInt!
+  executionId: Bytes!
+  transactionHash: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  logIndex: BigInt!
+}
+
+type RebalanceExecution @entity {
+  id: ID!
+  user: Bytes! # address
+  totalAssets: BigInt!
+  totalValue: BigInt!
+  executedAt: BigInt!
+  executionId: Bytes!
+  transactionHash: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  logIndex: BigInt!
+}
+
+type PermissionDelegation @entity {
+  id: ID!
+  parentPermissionId: Bytes!
+  delegator: Bytes! # address
+  delegatee: Bytes! # address
+  allowance: BigInt!
+  delegationId: Bytes!
+  createdAt: BigInt!
+  transactionHash: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  logIndex: BigInt!
+}
+
+type DelegationUsage @entity {
+  id: ID!
+  delegationId: Bytes!
+  delegatee: Bytes! # address
+  amount: BigInt!
+  remainingAllowance: BigInt!
+  transactionHash: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  logIndex: BigInt!
+}
+
+type AssetRebalance @entity {
+  id: ID!
+  user: Bytes! # address
+  token: Bytes! # address
+  fromAmount: BigInt!
+  toAmount: BigInt!
+  action: String!
+  executionId: Bytes!
+  transactionHash: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  logIndex: BigInt!
+}
+
+type UserActivity @entity {
+  id: ID! # user address
+  user: Bytes! # address
+  totalDCAExecutions: BigInt!
+  totalRebalanceExecutions: BigInt!
+  totalDelegations: BigInt!
+  totalVolumeTraded: BigInt!
+  firstActivityAt: BigInt!
+  lastActivityAt: BigInt!
+}
