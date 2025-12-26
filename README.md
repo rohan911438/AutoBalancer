@@ -1,73 +1,188 @@
-# Welcome to your Lovable project
+# AutoBalancer Pro
 
-## Project info
+A decentralized finance (DeFi) application for automated portfolio balancing and DCA (Dollar Cost Averaging) strategies on Ethereum.
 
-**URL**: https://lovable.dev/projects/d8e3d9a7-d034-48f3-ac86-24af79abdce9
+## 🚀 Features
 
-## How can I edit this code?
+- **Automated Portfolio Rebalancing**: Maintain target allocations across multiple tokens
+- **DCA Strategy Management**: Create and manage dollar-cost averaging plans
+- **Permission-Based Delegation**: Granular control over automated actions
+- **Cross-Chain Support**: Built for Ethereum with extensibility in mind
+- **Real-time Monitoring**: Track performance and execution logs
 
-There are several ways of editing your application.
+## 📋 Project Information
 
-**Use Lovable**
+**Project URL**: https://lovable.dev/projects/d8e3d9a7-d034-48f3-ac86-24af79abdce9
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/d8e3d9a7-d034-48f3-ac86-24af79abdce9) and start prompting.
+## 🔗 Smart Contract Deployment
 
-Changes made via Lovable will be committed automatically to this repo.
+### AutoBalancerAgent Contract - Ethereum Sepolia Testnet
 
-**Use your preferred IDE**
+**Contract Address**: [`0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815`](https://sepolia.etherscan.io/address/0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815)
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+**Network**: Ethereum Testnet Sepolia (Chain ID: 11155111)
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+**Deployment Details**:
+- **Deployer**: [`0x5C1bd09568006397316CD56E9D893F95a7b63f9A`](https://sepolia.etherscan.io/address/0x5C1bd09568006397316CD56E9D893F95a7b63f9A)
+- **Deployment Transaction**: [`0xbf42576501199b6966dc7d48fa4b28a18677311ef374f30ab57403fb894afbab`](https://sepolia.etherscan.io/tx/0xbf42576501199b6966dc7d48fa4b28a18677311ef374f30ab57403fb894afbab)
+- **Block Number**: 9,911,574
+- **Transaction Index**: 31
+- **Deployment Date**: December 25, 2025 11:52:37 UTC
 
-Follow these steps:
+**Contract Verification**:
+- **Compiler Version**: solc 0.8.31+commit.fd3a2265
+- **EVM Version**: default
+- **Optimization**: Disabled
+- **Contract Source**: Verified (Exact Match)
+- **Verification Date**: December 25, 2025 17:22:37 (+05:30 UTC)
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
+**Etherscan Links**:
+- [View Contract](https://sepolia.etherscan.io/address/0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815)
+- [Contract Code](https://sepolia.etherscan.io/address/0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815#code)
+- [Read Contract](https://sepolia.etherscan.io/address/0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815#readContract)
+- [Write Contract](https://sepolia.etherscan.io/address/0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815#writeContract)
+- [Contract ABI](https://sepolia.etherscan.io/address/0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815#code)
+
+## 🛠️ Technology Stack
+
+**Frontend**:
+- **React 18** with TypeScript
+- **Vite** for build tooling
+- **Tailwind CSS** for styling
+- **shadcn/ui** component library
+- **Web3 Integration** for blockchain interaction
+
+**Backend**:
+- **Node.js** with TypeScript
+- **Express.js** server framework
+- **Database Layer** for persistent storage
+- **Scheduler Service** for automated executions
+
+**Smart Contracts**:
+- **Solidity 0.8.31**
+- **OpenZeppelin** contracts for security
+- **Ethereum Sepolia Testnet** deployment
+
+**Development Tools**:
+- **ESLint** for code linting
+- **PostCSS** for CSS processing
+- **Bun** for package management
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js (>= 18.0.0)
+- npm or bun
+- MetaMask or compatible Web3 wallet
+
+### Installation
+
+```bash
+# Clone the repository
 git clone <YOUR_GIT_URL>
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Navigate to the project directory
+cd autobalancer-pro
 
-# Step 3: Install the necessary dependencies.
-npm i
+# Install frontend dependencies
+npm install
+# or
+bun install
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+# Navigate to backend directory
+cd backend
+
+# Install backend dependencies
+npm install
+# or
+bun install
 ```
 
-**Edit a file directly in GitHub**
+### Development
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```bash
+# Start frontend development server
+npm run dev
+# or
+bun run dev
 
-**Use GitHub Codespaces**
+# Start backend server (in separate terminal)
+cd backend
+npm run dev
+# or
+bun run dev
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### Testing
 
-## What technologies are used for this project?
+```bash
+# Run integration tests
+npm run test
 
-This project is built with:
+# Test MetaMask integration
+# Open metamask-test.html in browser
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+# Run wallet debug tests
+# Open wallet-debug.html in browser
+```
 
-## How can I deploy this project?
+## 📁 Project Structure
 
-Simply open [Lovable](https://lovable.dev/projects/d8e3d9a7-d034-48f3-ac86-24af79abdce9) and click on Share -> Publish.
+```
+├── src/                    # Frontend React application
+├── backend/                # Backend Node.js server
+├── contracts/              # Smart contracts
+├── public/                 # Static assets
+├── components.json         # shadcn/ui configuration
+├── tailwind.config.ts      # Tailwind CSS configuration
+├── vite.config.ts          # Vite configuration
+└── package.json           # Project dependencies
+```
 
-## Can I connect a custom domain to my Lovable project?
+## 🔧 Configuration
 
-Yes, you can!
+### Environment Variables
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+Create `.env` files in both root and backend directories:
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+**Frontend (.env)**:
+```env
+VITE_SEPOLIA_RPC_URL=https://sepolia.infura.io/v3/YOUR_PROJECT_ID
+VITE_CONTRACT_ADDRESS=0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815
+VITE_CHAIN_ID=11155111
+```
+
+**Backend (backend/.env)**:
+```env
+PORT=3001
+CONTRACT_ADDRESS=0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815
+SEPOLIA_RPC_URL=https://sepolia.infura.io/v3/YOUR_PROJECT_ID
+PRIVATE_KEY=your_private_key_for_automated_operations
+```
+
+## 📖 Usage
+
+1. **Connect Wallet**: Use MetaMask to connect to Sepolia testnet
+2. **Set Permissions**: Grant necessary permissions to the AutoBalancer agent
+3. **Create Strategies**: Set up rebalancing or DCA plans
+4. **Monitor**: Track performance through the dashboard
+
+## 🔐 Security
+
+- All smart contracts are verified on Etherscan
+- Permission-based system for granular control
+- Non-custodial design - users maintain control of their assets
+- Extensive testing and error handling
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📞 Support
+
+For support and questions, please open an issue in the repository.
