@@ -11,7 +11,13 @@
     "build": "envio build",
     "test": "envio test",
     "local": "envio local docker up",
-    "local:down": "envio local docker down"
+    "local:down": "envio local docker down",
+    "validate": "npm run codegen && npx tsc --noEmit --skipLibCheck",
+    "clean": "rm -rf generated && rm -rf .envio",
+    "logs": "docker logs envio-hasura",
+    "db:reset": "envio local db reset",
+    "setup": "npm run codegen",
+    "health": "curl -f http://localhost:8080/healthz || exit 1"
   },
   "keywords": [
     "envio",

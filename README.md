@@ -1,15 +1,55 @@
-# AutoBalancer Pro
 
-A decentralized finance (DeFi) application for automated portfolio balancing and DCA (Dollar Cost Averaging) strategies on Ethereum.
+# 🚀 AutoBalancer Pro - Complete DeFi Automation Platform
 
-## 🚀 Features
+A comprehensive decentralized finance (DeFi) automation platform that combines automated portfolio rebalancing, Dollar Cost Averaging (DCA), and ERC-7715 delegation permissions in a unified system.
 
-- **Automated Portfolio Rebalancing**: Maintain target allocations across multiple tokens
-- **DCA Strategy Management**: Create and manage dollar-cost averaging plans
-- **Permission-Based Delegation**: Granular control over automated actions
-- **Cross-Chain Support**: Built for Ethereum with extensibility in mind
-- **Real-time Monitoring**: Track performance and execution logs
-- **Event Indexing**: Comprehensive blockchain event tracking with Envio
+## 🏗️ Architecture Overview
+
+AutoBalancer Pro consists of four integrated components:
+
+```
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│   Frontend      │    │     Backend      │    │   Blockchain    │
+│   (React)       │◄──►│   (Node.js)      │◄──►│   (Sepolia)     │
+│                 │    │                  │    │                 │
+│ • User Interface│    │ • API Server     │    │ • Smart Contract│
+│ • Wallet Connect│    │ • Automation     │    │ • ERC-7715      │
+│ • MetaMask SDK  │    │ • Database       │    │ • Delegations   │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+         ▲                       ▲
+         │                       │
+         ▼                       ▼
+┌─────────────────┐    ┌──────────────────┐
+│   Envio Indexer │    │    Database      │
+│   (GraphQL)     │    │    (SQLite)      │
+│                 │    │                  │
+│ • Event Tracking│    │ • User Data      │
+│ • Real-time Data│    │ • DCA Plans      │
+│ • Hasura Engine │    │ • Rebalance Data │
+└─────────────────┘    └──────────────────┘
+```
+
+## ✨ Features
+
+### 🔄 Automated Portfolio Rebalancing
+- **Smart Threshold Detection**: Automatically rebalances when allocations drift beyond set thresholds
+- **Multi-Token Support**: Handle complex portfolios with multiple ERC-20 tokens
+- **Gas Optimization**: Intelligent batching and timing to minimize transaction costs
+
+### 💰 Dollar Cost Averaging (DCA)
+- **Flexible Scheduling**: Set custom intervals (daily, weekly, monthly)
+- **Multi-Asset DCA**: Create DCA plans for multiple token pairs
+- **Automated Execution**: Set-and-forget automation with full control
+
+### 🔐 ERC-7715 Delegation System
+- **Permission Management**: Granular control over wallet permissions
+- **Secure Delegations**: Cryptographically secure permission delegation
+- **Revocable Access**: Full control over granted permissions
+
+### 📊 Real-Time Analytics
+- **Live Portfolio Tracking**: Real-time balance and allocation monitoring
+- **Historical Data**: Complete transaction and rebalance history
+- **Performance Metrics**: ROI calculations and performance analytics
 
 ## 📋 Project Information
 

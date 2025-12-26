@@ -1,0 +1,157 @@
+# AutoBalancer Pro - Complete Development Environment
+# Docker Compose configuration for running all services
+
+version: '3.8'
+
+services:
+  # PostgreSQL Database for Envio Indexer
+  postgres:
+    image: postgres:15
+    container_name: autobalancer-postgres
+    environment:
+      POSTGRES_DB: envio-dev
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: testing
+      POSTGRES_PORT: 5432
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - autobalancer-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Hasura GraphQL Engine
+  hasura:
+    image: hasura/graphql-engine:v2.36.0
+    container_name: autobalancer-hasura
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:testing@postgres:5432/envio-dev
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
+      HASURA_GRAPHQL_DEV_MODE: "true"
+      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
+      HASURA_GRAPHQL_ADMIN_SECRET: testing
+      HASURA_GRAPHQL_UNAUTHORIZED_ROLE: public
+      HASURA_GRAPHQL_STRINGIFY_NUMERIC_TYPES: "true"
+    networks:
+      - autobalancer-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/healthz || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # AutoBalancer Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: autobalancer-backend
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+      - PORT=3001
+      - DATABASE_URL=sqlite:./data/autobalancer.db
+      - ETHEREUM_RPC_URL=${ETHEREUM_RPC_URL}
+      - AUTOBALANCER_CONTRACT_ADDRESS=${AUTOBALANCER_CONTRACT_ADDRESS}
+      - PRIVATE_KEY=${PRIVATE_KEY}
+      - LOG_LEVEL=info
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+      - backend_data:/app/data
+      - backend_logs:/app/logs
+    networks:
+      - autobalancer-network
+    depends_on:
+      - postgres
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3001/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Envio Indexer
+  envio:
+    build:
+      context: ./explorer
+      dockerfile: Dockerfile
+    container_name: autobalancer-envio
+    environment:
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=testing
+      - POSTGRES_DB=envio-dev
+      - HASURA_GRAPHQL_ENDPOINT=http://hasura:8080/v1/graphql
+      - HASURA_GRAPHQL_ADMIN_SECRET=testing
+      - ENVIO_RPC_URL=${ENVIO_RPC_URL}
+      - DEBUG=true
+    volumes:
+      - ./explorer:/app
+      - /app/node_modules
+    networks:
+      - autobalancer-network
+    depends_on:
+      hasura:
+        condition: service_healthy
+    command: npm run dev
+
+  # Frontend (for production deployment)
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend.Dockerfile
+    container_name: autobalancer-frontend
+    ports:
+      - "80:80"
+    environment:
+      - VITE_API_BASE_URL=http://backend:3001
+      - VITE_CONTRACT_ADDRESS=${AUTOBALANCER_CONTRACT_ADDRESS}
+      - VITE_CHAIN_ID=11155111
+    networks:
+      - autobalancer-network
+    depends_on:
+      - backend
+    profiles:
+      - production
+
+  # Redis for caching (optional)
+  redis:
+    image: redis:7-alpine
+    container_name: autobalancer-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - autobalancer-network
+    profiles:
+      - cache
+
+volumes:
+  postgres_data:
+    driver: local
+  backend_data:
+    driver: local
+  backend_logs:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  autobalancer-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

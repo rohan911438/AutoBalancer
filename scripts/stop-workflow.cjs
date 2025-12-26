@@ -1,0 +1,6 @@
+#!/usr/bin/env node
+// ...existing code...
+const { exec } = require('child_process');
+const process = require('process');
+// ...existing code...
+// (rest of stop-workflow.js code, unchanged)
