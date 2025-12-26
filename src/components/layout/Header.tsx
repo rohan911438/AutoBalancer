@@ -1,7 +1,8 @@
 import { Button } from '@/components/ui/button';
 import { useWallet } from '@/contexts/WalletContext';
-import { Wallet, LogOut, Bell } from 'lucide-react';
+import { Wallet, LogOut, Bell, RefreshCw } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
+import { useState } from 'react';
 
 const getPageTitle = (pathname: string) => {
   switch (pathname) {
@@ -23,9 +24,21 @@ const getPageTitle = (pathname: string) => {
 };
 
 export const Header = () => {
-  const { isConnected, address, balance, connectWallet, disconnectWallet, isLoading } = useWallet();
+  const { isConnected, address, balance, connectWallet, disconnectWallet, refreshBalance, isLoading } = useWallet();
   const location = useLocation();
   const pageTitle = getPageTitle(location.pathname);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefreshBalance = async () => {
+    setIsRefreshing(true);
+    try {
+      await refreshBalance();
+    } catch (error) {
+      console.error('Error refreshing balance:', error);
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
 
   return (
     <header className="sticky top-0 z-30 h-16 border-b border-border bg-background/80 backdrop-blur-xl">
@@ -54,6 +67,15 @@ export const Header = () => {
                   <p className="text-xs text-muted-foreground">Balance</p>
                   <p className="text-sm font-medium">{balance} ETH</p>
                 </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleRefreshBalance}
+                  disabled={isRefreshing}
+                  className="h-6 w-6"
+                >
+                  <RefreshCw className={`h-3 w-3 ${isRefreshing ? 'animate-spin' : ''}`} />
+                </Button>
                 <div className="h-8 w-px bg-border" />
                 <p className="text-sm font-mono">{address}</p>
               </div>

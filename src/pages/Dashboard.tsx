@@ -1,6 +1,9 @@
 import { StatCard } from '@/components/cards/StatCard';
 import { BackendStatus } from '@/components/BackendStatus';
 import { Button } from '@/components/ui/button';
+import { useWallet } from '@/contexts/WalletContext';
+import { BalanceDebugger } from '@/components/BalanceDebugger';
+import { WalletStatus } from '@/components/WalletStatus';
 import { 
   Activity, 
   DollarSign, 
@@ -8,7 +11,9 @@ import {
   TrendingUp,
   Play,
   Pause,
-  MoreVertical
+  MoreVertical,
+  Wallet,
+  RefreshCw
 } from 'lucide-react';
 import {
   Table,
@@ -58,8 +63,20 @@ const executionHistory = [
 ];
 
 export const Dashboard = () => {
+  const { isConnected, address, rawAddress, balance, refreshBalance } = useWallet();
+
+  const handleRefreshBalance = async () => {
+    try {
+      await refreshBalance();
+    } catch (error) {
+      console.error('Error refreshing balance:', error);
+    }
+  };
+
   return (
     <div className="space-y-6">
+      <WalletStatus />
+      
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-display font-bold">Dashboard</h1>

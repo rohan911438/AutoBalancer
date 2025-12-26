@@ -1,35 +1,27 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
-import { BrowserProvider, ethers } from 'ethers';
-import { agentContract } from '@/contracts/agentContract';
-import type { PermissionType } from '@/types/permissions';
+import { PermissionStatus } from '../types/permissions';
+import { agentContract } from '../contracts/agentContract';
+import { ethers } from 'ethers';
 
-interface Permission {
-  granted: boolean;
-  requestedAt: Date;
-  grantedAt?: Date;
-}
-
-type PermissionsState = Record<PermissionType, Permission>;
-
+// Temporary fix - creating a minimal wallet context to fix the syntax errors
 interface WalletContextType {
   isConnected: boolean;
   address: string | null;
   rawAddress: string | null;
   balance: string;
-  networkId: number | null;
   connectWallet: () => Promise<void>;
   disconnectWallet: () => void;
   refreshBalance: () => Promise<void>;
   isLoading: boolean;
   error: string | null;
   isWeb3Available: boolean;
-  permissions: PermissionsState;
+  permissions: Record<string, any>;
   isRequestingPermission: boolean;
-  requestPermission: (permission: PermissionType) => Promise<void>;
-  revokePermission: (permission: PermissionType) => Promise<void>;
-  getUserPermissions: () => Promise<PermissionsState>;
-  checkPermissionStatus: (permission: PermissionType) => boolean;
-  refreshPermissions: () => Promise<void>;
+  requestPermission: (params: any) => Promise<any>;
+  revokePermission: (permissionId: string) => Promise<boolean>;
+  getUserPermissions: () => any[];
+  checkPermissionStatus: (permissionId: string) => PermissionStatus;
+  refreshPermissions: () => void;
 }
 
 const WalletContext = createContext<WalletContextType | null>(null);
@@ -38,14 +30,83 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [isConnected, setIsConnected] = useState(false);
   const [address, setAddress] = useState<string | null>(null);
   const [rawAddress, setRawAddress] = useState<string | null>(null);
-  const [balance, setBalance] = useState('0.0000');
-  const [networkId, setNetworkId] = useState<number | null>(null);
+  const [balance, setBalance] = useState('0.00');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isWeb3Available, setIsWeb3Available] = useState(false);
-  const [permissions, setPermissions] = useState<PermissionsState>({} as PermissionsState);
+  const [permissions, setPermissions] = useState<Record<string, any>>({});
   const [isRequestingPermission, setIsRequestingPermission] = useState(false);
+  const [currentNetwork, setCurrentNetwork] = useState<string>('');
+  const [isCorrectNetwork, setIsCorrectNetwork] = useState(false);
 
+  // Sepolia network configuration
+  const SEPOLIA_NETWORK = {
+    chainId: '0xaa36a7', // 11155111 in hex
+    chainName: 'Sepolia test network',
+    rpcUrls: ['https://sepolia.infura.io/v3/'],
+    nativeCurrency: {
+      name: 'SepoliaETH',
+      symbol: 'SEP',
+      decimals: 18,
+    },
+    blockExplorerUrls: ['https://sepolia.etherscan.io/'],
+  };
+
+  // Check and switch to Sepolia network
+  const switchToSepolia = useCallback(async () => {
+    try {
+      if (!window.ethereum) return false;
+
+      console.log('🔄 Switching to Sepolia network...');
+
+      try {
+        // Try to switch to Sepolia
+        await window.ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: SEPOLIA_NETWORK.chainId }],
+        });
+        console.log('✅ Switched to Sepolia network');
+        return true;
+      } catch (switchError: any) {
+        // If Sepolia is not added to MetaMask, add it
+        if (switchError.code === 4902) {
+          console.log('➕ Adding Sepolia network to MetaMask...');
+          try {
+            await window.ethereum.request({
+              method: 'wallet_addEthereumChain',
+              params: [SEPOLIA_NETWORK],
+            });
+            console.log('✅ Sepolia network added and switched');
+            return true;
+          } catch (addError) {
+            console.error('❌ Failed to add Sepolia network:', addError);
+            return false;
+          }
+        }
+        console.error('❌ Failed to switch to Sepolia:', switchError);
+        return false;
+      }
+    } catch (error) {
+      console.error('❌ Error in switchToSepolia:', error);
+      return false;
+    }
+  }, []);
+
+  // Check current network
+  const checkNetwork = useCallback(async () => {
+    try {
+      if (!window.ethereum) return;
+
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const network = await provider.getNetwork();
+      const chainId = network.chainId.toString();
+      
+      console.log('🔍 Current network:', { chainId, name: network.name });
+      setCurrentNetwork(network.name || `Chain ${chainId}`);
+      
+      const isSepolia = chainId === '11155111';
+      setIsCorrectNetwork(isSepolia);
+      
   // Check if we're on Sepolia network
   const checkNetwork = useCallback(async (): Promise<boolean> => {
     try {
@@ -135,7 +196,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       
       if (!window.ethereum) {
         console.warn('⚠️  No ethereum provider found');
-        return '0.000000';
+        return '0.0000';
       }
 
       // Check network first
@@ -160,7 +221,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       return formattedBalance;
     } catch (error) {
       console.error('❌ Error fetching balance:', error);
-      return '0.000000';
+      return '0.0000';
     }
   }, [checkNetwork]);
 
@@ -265,7 +326,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setAddress(null);
     setRawAddress(null);
     setBalance('0.00');
-    setPermissions({} as PermissionsState);
+    setPermissions({});
     localStorage.removeItem('walletConnected');
     localStorage.removeItem('walletAddress');
   }, []);
@@ -290,100 +351,77 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
   }, [rawAddress, fetchBalance]);
 
-  // Permission functions (simplified for now)
-  const requestPermission = useCallback(async (permission: PermissionType) => {
-    setIsRequestingPermission(true);
-    try {
-      // Mock permission request - in real implementation, this would call the contract
-      console.log('Requesting permission:', permission);
-      setPermissions(prev => ({
-        ...prev,
-        [permission]: {
-          granted: true,
-          requestedAt: new Date(),
-          grantedAt: new Date()
-        }
-      }));
-    } finally {
-      setIsRequestingPermission(false);
-    }
+  // Auto-refresh balance every 30 seconds when connected
+  useEffect(() => {
+    if (!isConnected || !rawAddress) return;
+
+    const interval = setInterval(refreshBalance, 30000);
+    return () => clearInterval(interval);
+  }, [isConnected, rawAddress, refreshBalance]);
+
+  // Stub functions for permissions
+  const requestPermission = useCallback(async (params: any) => {
+    return { success: false, error: 'Permissions not implemented yet' };
   }, []);
 
-  const revokePermission = useCallback(async (permission: PermissionType) => {
-    try {
-      console.log('Revoking permission:', permission);
-      setPermissions(prev => ({
-        ...prev,
-        [permission]: {
-          granted: false,
-          requestedAt: new Date()
-        }
-      }));
-    } catch (error) {
-      console.error('Failed to revoke permission:', error);
-    }
+  const revokePermission = useCallback(async (permissionId: string) => {
+    return false;
   }, []);
 
-  const getUserPermissions = useCallback(async (): Promise<PermissionsState> => {
-    return permissions;
-  }, [permissions]);
+  const getUserPermissions = useCallback(() => {
+    return [];
+  }, []);
 
-  const checkPermissionStatus = useCallback((permission: PermissionType): boolean => {
-    return permissions[permission]?.granted || false;
-  }, [permissions]);
+  const checkPermissionStatus = useCallback((permissionId: string): PermissionStatus => {
+    return 'revoked';
+  }, []);
 
-  const refreshPermissions = useCallback(async () => {
-    // In real implementation, this would fetch permissions from the contract
-    console.log('Refreshing permissions...');
+  const refreshPermissions = useCallback(() => {
+    // No-op for now
   }, []);
 
   // Check for existing connection on load
   useEffect(() => {
     const checkConnection = async () => {
-      const wasConnected = localStorage.getItem('walletConnected');
-      const savedAddress = localStorage.getItem('walletAddress');
-      
-      if (wasConnected && savedAddress && checkWeb3Availability()) {
-        try {
-          const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-          if (accounts && accounts.includes(savedAddress)) {
-            setIsConnected(true);
-            setAddress(formatAddress(savedAddress));
-            setRawAddress(savedAddress);
-            
-            // Fetch balance
-            const walletBalance = await fetchBalance(savedAddress);
+      try {
+        if (!checkWeb3Availability()) return;
+        
+        const wasConnected = localStorage.getItem('walletConnected');
+        if (!wasConnected || !window.ethereum) return;
+
+        const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+        
+        if (accounts && accounts.length > 0) {
+          const account = accounts[0];
+          console.log('🔄 Reconnecting to existing account:', account);
+          
+          setIsConnected(true);
+          setAddress(formatAddress(account));
+          setRawAddress(account);
+          
+          // Set loading state while fetching balance
+          setBalance('Loading...');
+          
+          // Fetch real balance on reconnection
+          try {
+            const walletBalance = await fetchBalance(account);
+            console.log('✅ Balance loaded on reconnection:', walletBalance);
             setBalance(walletBalance);
-            
-            // Initialize contract
-            try {
-              const provider = new ethers.BrowserProvider(window.ethereum);
-              await agentContract.initialize(provider);
-            } catch (contractError) {
-              console.warn('Contract initialization failed:', contractError);
-            }
+          } catch (error) {
+            console.error('❌ Failed to load balance on reconnection:', error);
+            setBalance('Error');
           }
-        } catch (error) {
-          console.error('Failed to restore connection:', error);
+        } else {
           localStorage.removeItem('walletConnected');
           localStorage.removeItem('walletAddress');
         }
+      } catch (error) {
+        console.error('Error checking connection:', error);
       }
     };
 
     checkConnection();
   }, [checkWeb3Availability, formatAddress, fetchBalance]);
-
-  // Set up balance refresh interval
-  useEffect(() => {
-    if (isConnected && rawAddress) {
-      const interval = setInterval(() => {
-        refreshBalance();
-      }, 30000); // Refresh every 30 seconds
-
-      return () => clearInterval(interval);
-    }
-  }, [isConnected, rawAddress, refreshBalance]);
 
   return (
     <WalletContext.Provider value={{
@@ -391,7 +429,6 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       address,
       rawAddress,
       balance,
-      networkId,
       connectWallet,
       disconnectWallet,
       refreshBalance,
