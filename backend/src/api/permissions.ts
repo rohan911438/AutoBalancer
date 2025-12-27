@@ -1,6 +1,6 @@
 import express from 'express';
 import { database } from '../services/database';
-import { agentContract } from '../contracts/agent';
+import { agentContract, PermissionInfo } from '../contracts/agent';
 import { logger } from '../utils/logger';
 import { formatTimestamp } from '../utils/time';
 import { formatTokenAmount } from '../utils/tokens';
@@ -28,7 +28,7 @@ router.get('/:userAddress', async (req, res) => {
     // Enhance permissions with contract data and formatting
     const enhancedPermissions = await Promise.all(
       dbPermissions.map(async (permission) => {
-        let contractInfo = null;
+        let contractInfo: PermissionInfo | null = null;
         let utilization = 0;
         let isExpired = false;
         let timeUntilReset = 0;

@@ -548,6 +548,17 @@ export interface DelegationInfo {
 }
 
 /**
+ * Permission info returned by `getPermissionInfo`
+ */
+export interface PermissionInfo {
+	owner: string;
+	allowance: bigint;
+	spent: bigint;
+	resetTime: bigint;
+	timeWindow: bigint;
+}
+
+/**
  * DCA execution parameters
  */
 export interface DCAExecutionParams {

@@ -11,7 +11,7 @@
     "build": "npm run build:frontend && npm run build:backend",
     "build:dev": "vite build --mode development",
     "build:frontend": "vite build",
-    "build:backend": "cd backend && npm ci --include=dev && npm run build",
+    "build:backend": "cd backend && npm install --include=dev && npm run build",
     "start": "concurrently \"npm run start:backend\" \"npm run start:indexer\"",
     "start:backend": "cd backend && npm start",
     "start:indexer": "cd explorer && npm start",

@@ -1,6 +1,6 @@
 import express from 'express';
 import Joi from 'joi';
-import { agentContract } from '../contracts/agent';
+import { agentContract, PermissionInfo } from '../contracts/agent';
 import { database } from '../services/database';
 import { logger } from '../utils/logger';
 import { getCurrentTimestamp, daysToSeconds } from '../utils/time';
@@ -243,7 +243,7 @@ router.get('/permission/:permissionId', async (req, res) => {
     const dbPermission = await database.getPermission(permissionId);
 
     // Get permission info from contract
-    let contractInfo = null;
+    let contractInfo: PermissionInfo | null = null;
     try {
       contractInfo = await agentContract.getPermissionInfo(permissionId);
     } catch (error) {
