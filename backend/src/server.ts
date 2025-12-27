@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
@@ -18,7 +18,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 // Health check endpoint
-app.get('/health', (req, res) => {
+app.get('/health', (req: Request, res: Response) => {
   res.json({
     status: 'healthy',
     timestamp: new Date().toISOString(),
@@ -28,7 +28,7 @@ app.get('/health', (req, res) => {
 });
 
 // Basic API routes
-app.get('/api/test', (req, res) => {
+app.get('/api/test', (req: Request, res: Response) => {
   res.json({
     success: true,
     message: 'AutoBalancer backend is running!',
@@ -37,7 +37,7 @@ app.get('/api/test', (req, res) => {
 });
 
 // Wallet connection test endpoint
-app.post('/api/wallet/connect', (req, res) => {
+app.post('/api/wallet/connect', (req: Request, res: Response) => {
   try {
     const { address } = req.body;
     
@@ -73,7 +73,7 @@ app.post('/api/wallet/connect', (req, res) => {
 });
 
 // Plans endpoint (basic)
-app.get('/api/plans', (req, res) => {
+app.get('/api/plans', (req: Request, res: Response) => {
   const { userAddress } = req.query;
   
   res.json({
@@ -87,7 +87,7 @@ app.get('/api/plans', (req, res) => {
 });
 
 // Rebalancer endpoint (basic)
-app.get('/api/rebalancer', (req, res) => {
+app.get('/api/rebalancer', (req: Request, res: Response) => {
   const { userAddress } = req.query;
   
   res.json({
@@ -101,7 +101,7 @@ app.get('/api/rebalancer', (req, res) => {
 });
 
 // Error handling
-app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   logger.error('Unhandled error:', {
     error: err.message,
     stack: err.stack,
@@ -116,7 +116,7 @@ app.use((err: Error, req: express.Request, res: express.Response, next: express.
 });
 
 // 404 handler
-app.use('*', (req, res) => {
+app.use('*', (req: Request, res: Response) => {
   res.status(404).json({
     error: 'Route not found',
     path: req.originalUrl
