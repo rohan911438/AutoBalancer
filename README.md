@@ -2,6 +2,7 @@
 # 🚀 AutoBalancer Pro - Complete DeFi Automation Platform
 
 A comprehensive decentralized finance (DeFi) automation platform that combines automated portfolio rebalancing, Dollar Cost Averaging (DCA), and ERC-7715 delegation permissions in a unified system.
+<img width="1920" height="1080" alt="Screenshot (43)" src="https://github.com/user-attachments/assets/b6c9fce1-e0e6-4497-868a-c33b8920470e" />
 
 ## 🏗️ Architecture Overview
 
@@ -107,6 +108,7 @@ See [envio/README.md](envio/README.md) for detailed setup and usage instructions
 - [Read Contract](https://sepolia.etherscan.io/address/0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815#readContract)
 - [Write Contract](https://sepolia.etherscan.io/address/0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815#writeContract)
 - [Contract ABI](https://sepolia.etherscan.io/address/0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815#code)
+<img width="1920" height="1080" alt="Screenshot (42)" src="https://github.com/user-attachments/assets/54148bc8-e29f-47af-9845-3422ecc84bea" />
 
 ## 🛠️ Technology Stack
 
@@ -334,100 +336,4 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 For support and questions, please open an issue in the repository.
 
-## 🚀 Deployment Guide (detailed)
-
-This repository contains a Vite React frontend at the repository root and a Node/Express backend in `backend/`.
-
-Quick recommendation
-- Frontend: deploy to Vercel (good fit for Vite static apps)
-- Backend: deploy to a container or process host with persistent storage (Render, Railway, Fly, or a Docker host)
-
-Useful links
-- Vercel: https://vercel.com/
-- Render: https://render.com/
-- Railway: https://railway.app/
-- Fly: https://fly.io/
-- Infura: https://infura.io/
-- Alchemy: https://www.alchemy.com/
-- Etherscan Sepolia: https://sepolia.etherscan.io/
-- MetaMask: https://metamask.io/
-
-1) Deploy backend (Render example)
-
-- Create a new **Web Service** on Render and point it to this repository (branch: `main`).
-- Settings (copy/paste):
-   - Root Directory: `backend`
-   - Environment: `Node`
-   - Build Command: `npm install --include=dev && npm run build`
-   - Start Command: `npm run start`
-   - Health Check Path: `/health`
-   - Instance Type: `Starter` (or `Standard` for production)
-   - Instances: `1` (if you plan to run `node-cron` in-process; otherwise use a cron job / worker)
-
-- Environment variables (set in Render > Environment):
-   - `PORT=3001`
-   - `NODE_ENV=production`
-   - `ETHEREUM_RPC_URL=https://sepolia.infura.io/v3/YOUR_PROJECT_ID` (or Alchemy URL)
-   - `PRIVATE_KEY=<YOUR_PRIVATE_KEY>` (mark as secret)
-   - `AGENT_CONTRACT_ADDRESS=0x...` (your deployed contract address)
-   - `ALLOWED_ORIGINS=*` (or your frontend URL)
-   - `SQLITE_DB_PATH=./data/database.sqlite` (if using SQLite) — note persistent disk required on Render paid plans
-   - `SCHEDULER_INTERVAL_MINUTES=5`
-
-Notes for backend:
-- Prefer a managed DB (Postgres) for production. Use Render Postgres and set `DATABASE_URL` if migrating from SQLite.
-- If you keep `node-cron` in-process, run a single instance and enable persistent disk (paid) for SQLite.
-- Alternative: create a Render Cron Job that calls a protected POST endpoint (e.g. `/internal/run-scheduler`) and remove in-process cron.
-
-2) Deploy frontend to Vercel
-
-- Create a new project on Vercel and connect this repo.
-- Settings (copy/paste):
-   - Root Directory: `.` (repo root)
-   - Framework Preset: `Vite`
-   - Install Command: `npm install`
-   - Build Command: `npm run build:frontend`
-   - Output Directory: `dist`
-
-- Environment variables (Vercel > Project Settings > Environment Variables):
-```
-VITE_API_BASE_URL=https://<your-backend-url>
-VITE_SEPOLIA_RPC_URL=https://sepolia.infura.io/v3/YOUR_INFURA_PROJECT_ID
-VITE_CONTRACT_ADDRESS=0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815
-VITE_CHAIN_ID=11155111
-```
-
-3) Vercel serverless proxy option (optional)
-
-If you prefer having the frontend call `/api/*` on the same domain, a small serverless proxy is included at `api/proxy/[...path].ts`. Configure `BACKEND_URL` or `VITE_API_BASE_URL` in Vercel to point to your backend and Vercel will forward requests.
-
-4) Local reproduction commands (what I run locally to replicate CI)
-```
-# Frontend build
-npm ci
-npm run build:frontend
-
-# Backend build & start (from repo root)
-cd backend
-npm install --include=dev
-npm run build
-npm run start
-```
-
-5) Common issues and fixes
-- `tsc: command not found` — ensure devDependencies (TypeScript, @types/*) are installed during build. Use `npm install --include=dev` in your host build step or use a multi-stage Dockerfile (this repo includes `backend/Dockerfile`).
-- Missing types (`Cannot find module 'express' or its corresponding type declarations`) — install `@types/express`, `@types/node`, and other `@types/*` packages as devDependencies.
-- SQLite persistence — Render requires a persistent disk (paid) if you want to keep the SQLite file between restarts. Prefer managed Postgres for production.
-- Cron duplication — avoid multiple instances when running in-process cron; use a single instance or move scheduling to a cron job / worker.
-
-6) Helpful links and examples
-- Render web services: https://render.com/docs/deploy-nodejs
-- Vercel docs for Vite apps: https://vercel.com/docs/frameworks/vite
-- Creating Environment Variables on Vercel: https://vercel.com/docs/environment-variables
-- Render Cron Jobs: https://render.com/docs/cron-jobs
-
-If you want I can:
-- add `backend/README.md` with Render + Docker instructions and a sample Procfile,
-- add a protected `/internal/run-scheduler` endpoint and example Render Cron Job configuration,
-- or prepare a one-click Vercel/Render deploy guide with exact UI screenshots.
 
