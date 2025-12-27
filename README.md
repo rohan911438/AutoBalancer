@@ -12,14 +12,14 @@ AutoBalancer provides safe, auditable automation for token portfolios by combini
 - Recurring buys / DCA: schedule repeated purchases across arbitrary token pairs (daily/weekly/etc.) so users can implement DCA strategies reliably without manually signing each transaction.
 - Secure delegation: use an on-chain delegation/agent contract (ERC-7715-style) so an operator can execute authorized actions on behalf of a user without custody of funds. Delegations are scoped and revocable.
 
-Problems AutoBalancer addresses in detail:
+### Problems AutoBalancer addresses in detail:
 
 - Portfolio drift & timing: price moves change allocations; AutoBalancer detects drift and rebalances to target weights, preserving allocation strategy with minimal manual intervention.
 - High transaction overhead for repetitive actions: DCA and frequent rebalances can create many small transactions. AutoBalancer batches or schedules operations to reduce gas friction where possible.
 - Trust & custody: users keep custody; the agent is given narrowly scoped permissions that can be revoked on-chain—this minimizes trust and attack surface.
 - Observability: all automated actions emit events that are indexed (via `envio-indexer`) to provide audit trails and allow users to verify what happened and why.
 
-Where this helps users and integrators:
+### Where this helps users and integrators:
 
 - Retail traders who want set-and-forget strategies (DCA) without custodial risk.
 - Portfolio managers who need to maintain target allocations across multiple ERC-20 tokens.
