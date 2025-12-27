@@ -51,9 +51,6 @@ AutoBalancer Pro consists of four integrated components:
 - **Historical Data**: Complete transaction and rebalance history
 - **Performance Metrics**: ROI calculations and performance analytics
 
-## 📋 Project Information
-
-**Project URL**: https://lovable.dev/projects/d8e3d9a7-d034-48f3-ac86-24af79abdce9
 
 ## 🔗 Smart Contract Deployment
 
@@ -64,8 +61,8 @@ AutoBalancer Pro consists of four integrated components:
 **Network**: Ethereum Testnet Sepolia (Chain ID: 11155111)
 
 **Deployment Details**:
-- **Deployer**: [`0x5C1bd09568006397316CD56E9D893F95a7b63f9A`](https://sepolia.etherscan.io/address/0x5C1bd09568006397316CD56E9D893F95a7b63f9A)
 
+**Live App**: https://autobalancer.lovable.app
 ## 🔍 Event Indexing
 
 ### Envio Indexer
