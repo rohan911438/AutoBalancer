@@ -23,7 +23,7 @@ export interface DCAExecutionResult {
   planId: string;
   txHash?: string;
   amountIn?: bigint;
-  amountOut?: bigint;
+  amountOut?: bigint | undefined;
   gasUsed?: bigint;
   errorMessage?: string;
   skipReason?: string;
@@ -189,7 +189,7 @@ export class DCAEngine {
       const permissionInfo = await agentContract.getPermissionInfo(plan.permissionId);
       
       // Check if permission is still active
-      if (!permissionInfo.owner || permissionInfo.owner === ethers.ZeroAddress) {
+      if (!permissionInfo || !permissionInfo.owner || permissionInfo.owner === ethers.ZeroAddress) {
         logger.warn(`🚫 Permission ${plan.permissionId} is not active`);
         return false;
       }
@@ -264,7 +264,7 @@ export class DCAEngine {
 
       logger.info(`✅ DCA execution successful for plan ${plan.id}`, {
         txHash: contractResult.txHash,
-        amountOut: contractResult.amountOut.toString()
+        amountOut: contractResult.amountOut ? contractResult.amountOut.toString() : '0'
       });
 
       return {

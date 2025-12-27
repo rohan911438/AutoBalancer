@@ -352,7 +352,7 @@ export class RebalanceEngine {
       const permissionInfo = await agentContract.getPermissionInfo(config.permissionId);
       
       // Check if permission is still active
-      if (!permissionInfo.owner || permissionInfo.owner === ethers.ZeroAddress) {
+      if (!permissionInfo || !permissionInfo.owner || permissionInfo.owner === ethers.ZeroAddress) {
         logger.warn(`🚫 Permission ${config.permissionId} is not active`);
         return false;
       }
@@ -429,7 +429,7 @@ export class RebalanceEngine {
 
       logger.info(`✅ Rebalance execution successful for config ${config.id}`, {
         txHash: contractResult.txHash,
-        amountsOut: contractResult.amountsOut.map(a => a.toString())
+        amountsOut: contractResult.amountsOut ? contractResult.amountsOut.map(a => a.toString()) : []
       });
 
       return {
@@ -437,7 +437,7 @@ export class RebalanceEngine {
         configId: config.id,
         txHash: contractResult.txHash,
         amountsIn: amountsFrom,
-        amountsOut: contractResult.amountsOut
+        amountsOut: contractResult.amountsOut || []
       };
 
     } catch (error) {

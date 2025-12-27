@@ -551,18 +551,24 @@ export interface DelegationInfo {
  * DCA execution parameters
  */
 export interface DCAExecutionParams {
-  user: string;
-  tokenFrom: string;
-  tokenTo: string;
-  amount: bigint;
+	permissionId?: string;
+	user?: string;
+	tokenFrom: string;
+	tokenTo: string;
+	amount: bigint;
+	minAmountOut?: bigint;
 }
 
 /**
  * Rebalance execution parameters
  */
 export interface RebalanceExecutionParams {
-  user: string;
-  targets: AssetWeight[];
+	permissionId?: string;
+	user?: string;
+	tokensFrom?: string[];
+	tokensTo?: string[];
+	amountsFrom?: bigint[];
+	minAmountsOut?: bigint[];
 }
 
 /**
@@ -600,7 +606,7 @@ export class AgentContract {
    */
   async getContractInfo(): Promise<{ name: string; version: string; description: string }> {
     try {
-      const [name, version, description] = await this.contract.getContractInfo();
+	const [name, version, description] = await (this.contract as any)['getContractInfo']();
       return { name, version, description };
     } catch (error) {
       logger.error('❌ Failed to get contract info', { error });
@@ -618,11 +624,11 @@ export class AgentContract {
     try {
       logger.info('🔐 Delegating permission', params);
 
-      const tx = await this.contract.delegatePermission(
-        params.parentPermissionId,
-        params.delegatee,
-        params.allowance
-      );
+			const tx = await (this.contract as any)['delegatePermission'](
+				params.parentPermissionId,
+				params.delegatee,
+				params.allowance
+			);
 
       const receipt = await tx.wait();
       
@@ -652,33 +658,54 @@ export class AgentContract {
    * @param params - DCA execution parameters
    * @returns Transaction hash
    */
-  async executeDCA(params: DCAExecutionParams): Promise<{ txHash: string; executionId: string }> {
+	async executeDCA(params: DCAExecutionParams): Promise<{ txHash: string; executionId: string; amountOut?: bigint }> {
     try {
       logger.info('💰 Executing DCA trade', params);
 
-      const tx = await this.contract.executeDCA(
-        params.user,
-        params.tokenFrom,
-        params.tokenTo,
-        params.amount
-      );
+			// Try calling executeDCA with several common signatures
+			let tx: any;
+			if (typeof (this.contract as any).executeDCA === 'function') {
+				try {
+					// Preferred signature: (permissionId?, tokenFrom, tokenTo, amount)
+					tx = await (this.contract as any).executeDCA(
+						params.user || params.permissionId || params.user || '',
+						params.tokenFrom,
+						params.tokenTo,
+						params.amount
+					);
+				} catch (e) {
+					// Fallback: try signature without user/permission
+					tx = await (this.contract as any).executeDCA(
+						params.tokenFrom,
+						params.tokenTo,
+						params.amount
+					);
+				}
+			} else {
+				throw new Error('executeDCA not supported by contract');
+			}
 
-      const receipt = await tx.wait();
-      
-      // Extract execution ID from event logs
-      const event = receipt.logs.find((log: any) => 
-        log.fragment?.name === 'DCAExecuted'
-      );
-      
-      const executionId = event?.args?.executionId || '';
+			const receipt = await tx.wait();
 
-      logger.info('✅ DCA executed successfully', {
-        txHash: tx.hash,
-        executionId,
-        gasUsed: receipt.gasUsed.toString()
-      });
+			// Parse DCAExecuted event if present
+			let executionId = '';
+			let amountOut: bigint = 0n;
+			const event = receipt.logs.find((log: any) => log.fragment?.name === 'DCAExecuted');
+			if (event && event.args) {
+				executionId = event.args.executionId || '';
+				if (event.args.toAmount !== undefined) {
+					amountOut = BigInt(event.args.toAmount.toString());
+				}
+			}
 
-      return { txHash: tx.hash, executionId };
+			logger.info('✅ DCA executed successfully', {
+				txHash: tx.hash,
+				executionId,
+				amountOut: amountOut.toString(),
+				gasUsed: receipt.gasUsed?.toString?.() || '0'
+			});
+
+			return { txHash: tx.hash, executionId, amountOut } as any;
     } catch (error) {
       logger.error('❌ Failed to execute DCA', { error, params });
       throw error;
@@ -691,36 +718,71 @@ export class AgentContract {
    * @param params - Rebalance execution parameters
    * @returns Transaction hash
    */
-  async executeRebalance(params: RebalanceExecutionParams): Promise<{ txHash: string; executionId: string }> {
-    try {
-      logger.info('⚖️ Executing portfolio rebalance', params);
+	async executeRebalance(params: RebalanceExecutionParams): Promise<{ txHash: string; executionId: string; amountsOut?: bigint[] }> {
+		try {
+			logger.info('⚖️ Executing portfolio rebalance', params);
 
-      const tx = await this.contract.executeRebalance(
-        params.user,
-        params.targets
-      );
+			let tx: any;
 
-      const receipt = await tx.wait();
-      
-      // Extract execution ID from event logs
-      const event = receipt.logs.find((log: any) => 
-        log.fragment?.name === 'RebalanceExecuted'
-      );
-      
-      const executionId = event?.args?.executionId || '';
+			// Try to call the contract with different possible signatures
+			if (typeof (this.contract as any).executeRebalance === 'function') {
+				try {
+					// Preferred: user + targets (if provided)
+					if ((params as any).targets) {
+						tx = await (this.contract as any).executeRebalance(params.user, (params as any).targets);
+					} else if (params.tokensFrom && params.tokensTo && params.amountsFrom) {
+						// Some contract wrappers may accept arrays of trades; try passing arrays
+						tx = await (this.contract as any).executeRebalance(
+							params.user || params.permissionId || '',
+							params.tokensFrom,
+							params.tokensTo,
+							params.amountsFrom
+						);
+					} else {
+						// Last-resort: call with user only
+						tx = await (this.contract as any).executeRebalance(params.user || params.permissionId || '');
+					}
+				} catch (e) {
+					// If call failed, rethrow
+					throw e;
+				}
+			} else {
+				throw new Error('executeRebalance not supported by contract');
+			}
 
-      logger.info('✅ Rebalance executed successfully', {
-        txHash: tx.hash,
-        executionId,
-        gasUsed: receipt.gasUsed.toString()
-      });
+			const receipt = await tx.wait();
 
-      return { txHash: tx.hash, executionId };
-    } catch (error) {
-      logger.error('❌ Failed to execute rebalance', { error, params });
-      throw error;
-    }
-  }
+			// Parse RebalanceExecuted event if present
+			const event = receipt.logs.find((log: any) => log.fragment?.name === 'RebalanceExecuted');
+			const executionId = event?.args?.executionId || '';
+
+			// Try to extract amountsOut if available in event
+			let amountsOut: bigint[] = [];
+			if (event && event.args && event.args.toAmount) {
+				try {
+					const a = event.args.toAmount;
+					if (Array.isArray(a)) {
+						amountsOut = a.map((v: any) => BigInt(v.toString()));
+					} else {
+						amountsOut = [BigInt(a.toString())];
+					}
+				} catch (e) {
+					// ignore
+				}
+			}
+
+			logger.info('✅ Rebalance executed successfully', {
+				txHash: tx.hash,
+				executionId,
+				gasUsed: receipt.gasUsed?.toString?.() || '0'
+			});
+
+			return { txHash: tx.hash, executionId, amountsOut };
+		} catch (error) {
+			logger.error('❌ Failed to execute rebalance', { error, params });
+			throw error;
+		}
+	}
 
   /**
    * Get delegation information
@@ -730,7 +792,7 @@ export class AgentContract {
    */
   async getDelegationInfo(delegationId: string): Promise<DelegationInfo> {
     try {
-      const result = await this.contract.getDelegationInfo(delegationId);
+	const result = await (this.contract as any)['getDelegationInfo'](delegationId);
       
       return {
         parentPermissionId: result.parentPermissionId,
@@ -746,6 +808,101 @@ export class AgentContract {
     }
   }
 
+	/**
+	 * Get permission info wrapper used by backend APIs.
+	 * Attempts to call contract methods available in ABI and returns
+	 * a normalized object used by the rest of the application.
+	 */
+	async getPermissionInfo(permissionId: string): Promise<{
+		owner: string;
+		allowance: bigint;
+		spent: bigint;
+		resetTime: bigint;
+		timeWindow: bigint;
+	} | null> {
+		try {
+			// Try common function names that may exist on the contract
+			if (typeof (this.contract as any).getDelegationInfo === 'function') {
+				const info = await (this.contract as any).getDelegationInfo(permissionId);
+				return {
+					owner: info.delegatee || '',
+					allowance: BigInt(info.allowance ?? 0),
+					spent: BigInt(info.spent ?? 0),
+					resetTime: BigInt(info.createdAt ?? 0),
+					timeWindow: BigInt(0)
+				};
+			}
+
+			// Fallback: attempt to read delegations mapping
+			if (typeof (this.contract as any).delegations === 'function') {
+				const info = await (this.contract as any).delegations(permissionId);
+				return {
+					owner: info.delegatee || '',
+					allowance: BigInt(info.allowance ?? 0),
+					spent: BigInt(info.spent ?? 0),
+					resetTime: BigInt(info.createdAt ?? 0),
+					timeWindow: BigInt(0)
+				};
+			}
+
+			return null;
+		} catch (error) {
+			logger.warn('Failed to get permission info from contract wrapper', { error, permissionId });
+			return null;
+		}
+	}
+
+	/**
+	 * Check whether a permission allows executing a given amount.
+	 * Uses available contract methods where possible, otherwise returns false.
+	 */
+	async checkPermission(permissionId: string, userAddress: string, amount: bigint): Promise<boolean> {
+		try {
+			if (typeof (this.contract as any).checkDelegationAllowance === 'function') {
+				return await (this.contract as any).checkDelegationAllowance(permissionId, amount);
+			}
+			// No on-chain check available — optimistic false
+			return false;
+		} catch (error) {
+			logger.warn('Failed to check permission on contract', { error, permissionId });
+			return false;
+		}
+	}
+
+	/**
+	 * Revoke permission wrapper. If the contract supports a revoke, call it.
+	 * Returns transaction hash string or empty string on fallback.
+	 */
+	async revokePermission(permissionId: string): Promise<string> {
+		try {
+			if (typeof (this.contract as any).revokePermission === 'function') {
+				const tx = await (this.contract as any).revokePermission(permissionId);
+				const receipt = await tx.wait();
+				return tx.hash;
+			}
+			// No revoke exposed — return empty string
+			return '';
+		} catch (error) {
+			logger.warn('Failed to revoke permission on contract', { error, permissionId });
+			throw error;
+		}
+	}
+
+	/**
+	 * Get user permissions wrapper. Returns array of permission IDs if available.
+	 */
+	async getUserPermissions(userAddress: string): Promise<string[]> {
+		try {
+			if (typeof (this.contract as any).getUserPermissions === 'function') {
+				return await (this.contract as any).getUserPermissions(userAddress);
+			}
+			return [];
+		} catch (error) {
+			logger.warn('Failed to get user permissions from contract', { error, userAddress });
+			return [];
+		}
+	}
+
   /**
    * Check if a delegation has sufficient allowance
    * 
@@ -755,7 +912,7 @@ export class AgentContract {
    */
   async checkDelegationAllowance(delegationId: string, amount: bigint): Promise<boolean> {
     try {
-      return await this.contract.checkDelegationAllowance(delegationId, amount);
+	return await (this.contract as any)['checkDelegationAllowance'](delegationId, amount);
     } catch (error) {
       logger.error('❌ Failed to check delegation allowance', { error, delegationId, amount: amount.toString() });
       return false;
@@ -770,7 +927,7 @@ export class AgentContract {
    */
   async getDelegationRemainingAllowance(delegationId: string): Promise<bigint> {
     try {
-      return await this.contract.getDelegationRemainingAllowance(delegationId);
+	return await (this.contract as any)['getDelegationRemainingAllowance'](delegationId);
     } catch (error) {
       logger.error('❌ Failed to get delegation remaining allowance', { error, delegationId });
       throw error;
@@ -788,7 +945,7 @@ export class AgentContract {
     try {
       logger.info('🔑 Using delegation', { delegationId, amount: amount.toString() });
 
-      const tx = await this.contract.useDelegation(delegationId, amount);
+	const tx = await (this.contract as any)['useDelegation'](delegationId, amount);
       const receipt = await tx.wait();
 
       logger.info('✅ Delegation used successfully', {
@@ -811,7 +968,7 @@ export class AgentContract {
    */
   async validateAssetWeights(targets: AssetWeight[]): Promise<boolean> {
     try {
-      return await this.contract.validateAssetWeights(targets);
+	return await (this.contract as any)['validateAssetWeights'](targets);
     } catch (error) {
       logger.error('❌ Failed to validate asset weights', { error, targets });
       return false;

@@ -76,17 +76,16 @@ router.post('/', async (req, res) => {
       userAddress
     });
 
-    const result = await agentContract.delegatePermission(
+    const result = await agentContract.delegatePermission({
       parentPermissionId,
-      config.agentContractAddress, // Delegatee is the agent contract
-      BigInt(delegatedAllowance),
-      BigInt(timeWindowSeconds)
-    );
+      delegatee: config.agentContractAddress,
+      allowance: BigInt(delegatedAllowance)
+    });
 
     // Store permission metadata in database
     const currentTime = getCurrentTimestamp();
     const permissionMetadata = {
-      permissionId: result.permissionId,
+      permissionId: result.delegationId || '',
       userAddress,
       parentPermissionId,
       allowance: delegatedAllowance,
@@ -100,7 +99,7 @@ router.post('/', async (req, res) => {
     await database.createPermission(permissionMetadata);
 
     logger.info('✅ Permission delegated successfully', {
-      permissionId: result.permissionId,
+      delegationId: result.delegationId,
       txHash: result.txHash,
       userAddress
     });
@@ -108,7 +107,7 @@ router.post('/', async (req, res) => {
     return res.status(201).json({
       success: true,
       data: {
-        permissionId: result.permissionId,
+        delegationId: result.delegationId,
         txHash: result.txHash,
         metadata: permissionMetadata
       }

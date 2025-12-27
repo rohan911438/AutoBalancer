@@ -36,21 +36,23 @@ router.get('/:userAddress', async (req, res) => {
         try {
           // Get real-time info from contract
           contractInfo = await agentContract.getPermissionInfo(permission.permissionId);
-          
-          // Calculate utilization percentage
-          const spent = Number(contractInfo.spent);
-          const allowance = Number(contractInfo.allowance);
-          utilization = allowance > 0 ? (spent / allowance) * 100 : 0;
-          
-          // Check if permission has expired
-          const now = Math.floor(Date.now() / 1000);
-          const resetTime = Number(contractInfo.resetTime);
-          const timeWindow = Number(contractInfo.timeWindow);
-          const nextResetTime = resetTime + timeWindow;
-          
-          isExpired = now > nextResetTime;
-          timeUntilReset = Math.max(0, nextResetTime - now);
-          
+
+          if (contractInfo) {
+            // Calculate utilization percentage
+            const spent = Number(contractInfo.spent);
+            const allowance = Number(contractInfo.allowance);
+            utilization = allowance > 0 ? (spent / allowance) * 100 : 0;
+
+            // Check if permission has expired
+            const now = Math.floor(Date.now() / 1000);
+            const resetTime = Number(contractInfo.resetTime);
+            const timeWindow = Number(contractInfo.timeWindow);
+            const nextResetTime = resetTime + timeWindow;
+
+            isExpired = now > nextResetTime;
+            timeUntilReset = Math.max(0, nextResetTime - now);
+          }
+
         } catch (error) {
           logger.warn('Failed to get contract info for permission:', {
             permissionId: permission.permissionId,
@@ -133,15 +135,15 @@ router.get('/permission/:permissionId/status', async (req, res) => {
       });
     }
 
-    // Get real-time contract information
+    // Get real-time contract information (may be null)
     const contractInfo = await agentContract.getPermissionInfo(permissionId);
-    
-    // Calculate detailed status
+
+    // Calculate detailed status (use defaults if contract info missing)
     const now = Math.floor(Date.now() / 1000);
-    const allowance = Number(contractInfo.allowance);
-    const spent = Number(contractInfo.spent);
-    const resetTime = Number(contractInfo.resetTime);
-    const timeWindow = Number(contractInfo.timeWindow);
+    const allowance = Number(contractInfo?.allowance ?? 0);
+    const spent = Number(contractInfo?.spent ?? 0);
+    const resetTime = Number(contractInfo?.resetTime ?? 0);
+    const timeWindow = Number(contractInfo?.timeWindow ?? 0);
     const nextResetTime = resetTime + timeWindow;
     
     const remaining = Math.max(0, allowance - spent);
@@ -229,9 +231,9 @@ router.get('/check/:permissionId/:amount', async (req, res) => {
       BigInt(amount)
     );
 
-    // Get additional context
+    // Get additional context (may be null)
     const contractInfo = await agentContract.getPermissionInfo(permissionId);
-    const remaining = Number(contractInfo.allowance) - Number(contractInfo.spent);
+    const remaining = Math.max(0, Number(contractInfo?.allowance ?? 0) - Number(contractInfo?.spent ?? 0));
     
     const checkResult = {
       isValid,
