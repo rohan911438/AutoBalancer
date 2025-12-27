@@ -4,6 +4,29 @@
 A comprehensive decentralized finance (DeFi) automation platform that combines automated portfolio rebalancing, Dollar Cost Averaging (DCA), and ERC-7715 delegation permissions in a unified system.
 <img width="1920" height="1080" alt="Screenshot (43)" src="https://github.com/user-attachments/assets/b6c9fce1-e0e6-4497-868a-c33b8920470e" />
 
+## Detailed overview — what AutoBalancer does and the problems it solves
+
+AutoBalancer provides safe, auditable automation for token portfolios by combining three capabilities:
+
+- Automated rebalancing: continuously monitor portfolio allocations and perform on-chain rebalances when holdings drift beyond user-configured thresholds. This removes the need for manual monitoring and reduces timing- and emotion-driven mistakes.
+- Recurring buys / DCA: schedule repeated purchases across arbitrary token pairs (daily/weekly/etc.) so users can implement DCA strategies reliably without manually signing each transaction.
+- Secure delegation: use an on-chain delegation/agent contract (ERC-7715-style) so an operator can execute authorized actions on behalf of a user without custody of funds. Delegations are scoped and revocable.
+
+Problems AutoBalancer addresses in detail:
+
+- Portfolio drift & timing: price moves change allocations; AutoBalancer detects drift and rebalances to target weights, preserving allocation strategy with minimal manual intervention.
+- High transaction overhead for repetitive actions: DCA and frequent rebalances can create many small transactions. AutoBalancer batches or schedules operations to reduce gas friction where possible.
+- Trust & custody: users keep custody; the agent is given narrowly scoped permissions that can be revoked on-chain—this minimizes trust and attack surface.
+- Observability: all automated actions emit events that are indexed (via `envio-indexer`) to provide audit trails and allow users to verify what happened and why.
+
+Where this helps users and integrators:
+
+- Retail traders who want set-and-forget strategies (DCA) without custodial risk.
+- Portfolio managers who need to maintain target allocations across multiple ERC-20 tokens.
+- Developers building integrations that require reliable, auditable automation and permissioned execution.
+
+This section is intentionally additive — the rest of the README keeps existing deployment, architecture diagrams, contract addresses, and setup instructions. Scroll down for architecture, indexer details, and quickstart commands.
+
 ## 🏗️ Architecture Overview
 
 AutoBalancer Pro consists of four integrated components:
