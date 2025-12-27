@@ -73,11 +73,6 @@ The project includes a comprehensive Envio indexer that tracks all contract even
 **Location**: `/envio/`
 
 **Indexed Events**:
-- `DCAExecuted` - DCA strategy executions
-- `RebalanceExecuted` - Portfolio rebalancing operations
-- `PermissionDelegated` - Permission delegation events
-- `DelegationUsed` - Permission usage tracking
-- `AssetRebalanced` - Individual asset movements
 
 **GraphQL API**: Available at `http://localhost:8080` when running locally
 
@@ -89,6 +84,13 @@ npm run local    # Start Docker containers
 npm run dev      # Start indexer
 ```
 
+**Author & Team**
+
+- **Team:** Brotherhood
+- **Maintainer:** Rohan Kumar
+- **GitHub:** https://github.com/rohan911438
+
+For support or contributions, open an issue on the repository or contact the maintainer via the GitHub link above.
 See [envio/README.md](envio/README.md) for detailed setup and usage instructions.
 - **Deployment Transaction**: [`0xbf42576501199b6966dc7d48fa4b28a18677311ef374f30ab57403fb894afbab`](https://sepolia.etherscan.io/tx/0xbf42576501199b6966dc7d48fa4b28a18677311ef374f30ab57403fb894afbab)
 - **Block Number**: 9,911,574
