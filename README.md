@@ -336,3 +336,32 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## 📞 Support
 
 For support and questions, please open an issue in the repository.
+
+## 🚀 Deployment (Vercel frontend + backend hosting)
+
+This repo contains a Vite frontend at the repository root and a Node/Express backend in `backend/`.
+
+- Recommended approach: deploy the **frontend to Vercel** and the **backend to a simple Node host** (Railway / Render / Fly / Heroku). Vercel is optimized for static frontends and serverless functions — this project includes a stateful scheduler and SQLite in the backend which is not a good fit for long-running processes on Vercel.
+
+- Quick steps (frontend on Vercel, backend on Render/Railway):
+   1. Deploy backend
+       - Push the `backend/` folder to a Git repo or deploy from this repo on Render/Railway.
+       - Use `npm install` and `npm run build` (or `npm run start`) for the backend.
+       - Configure backend environment variables from `backend/.env.example` (RPC URL, PRIVATE_KEY, DB config).
+       - Obtain the backend public URL (e.g. `https://autobalancer-backend.example.com`).
+
+   2. Deploy frontend to Vercel
+       - In Vercel, create a new project from this repository.
+       - Set Build Command: `npm run build:frontend` (project already has `build:frontend`).
+       - Set Output Directory: `dist`.
+       - Add an Environment Variable in Vercel: `VITE_API_BASE_URL` with your backend URL (e.g. `https://autobalancer-backend.example.com`).
+       - (Optional) Add other VITE_* env vars (RPC URL, CONTRACT_ADDRESS) in Vercel project settings.
+
+- Notes and limitations:
+   - The backend currently runs as a long-lived Express app and uses a scheduler and SQLite. Running that unchanged as serverless functions on Vercel is not recommended (loss of persistent storage and cron jobs).
+   - If you *must* run backend on Vercel, you will need to refactor: convert async scheduler to external cron (or Vercel Scheduled Functions), move DB to a hosted database (Postgres), and rewrite Express endpoints as Vercel Serverless Functions under `/api`.
+
+If you want, I can:
+- Create a short `backend/README.md` with Render/Railway deploy steps and a sample `Dockerfile` or Procfile, and
+- Add a Vercel project template (updated `vercel.json`) that includes SPA rewrites and a note on env vars.
+
