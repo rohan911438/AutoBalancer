@@ -52,6 +52,7 @@
     "@types/helmet": "^0.0.48",
     "@types/node": "^20.4.5",
     "@types/node-cron": "^3.0.8",
+    "@types/dotenv": "^8.2.0",
     "@types/winston": "^2.4.4",
     "@typescript-eslint/eslint-plugin": "^6.2.1",
     "@typescript-eslint/parser": "^6.2.1",
