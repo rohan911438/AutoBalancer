@@ -361,4 +361,12 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 For support and questions, please open an issue in the repository.
 
+## 📂 Presentation (PPT)
+
+A presentation (PowerPoint) version of the project overview is available (generated via Claude). You can view or download the PPT here:
+
+- [Download presentation (PPT) — Claude artifact](https://claude.ai/public/artifacts/54f34c15-190f-4b8b-8c24-007ea71ee702)
+
+Use this slide deck for stakeholder briefings, demos, or to export directly into PowerPoint.
+
 
