@@ -369,4 +369,12 @@ A presentation (PowerPoint) version of the project overview is available (genera
 
 Use this slide deck for stakeholder briefings, demos, or to export directly into PowerPoint.
 
+## 🎬 Demo Video
+
+Watch a short demo walkthrough of AutoBalancer Pro here:
+
+- [AutoBalancer Pro demo video](https://youtu.be/sXqiT0W79AU?si=Ysp7BMK1Xw_RFTta)
+
+Use the video for quick demos or embed it in presentations.
+
 
