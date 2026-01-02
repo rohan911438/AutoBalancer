@@ -297,15 +297,36 @@ AutoBalancer Pro consists of four integrated components:
 
 ## 🔗 Smart Contract Deployment
 
-### AutoBalancerAgent Contract - Ethereum Sepolia Testnet
+### 📋 AutoBalancerAgent Contract - Ethereum Sepolia Testnet
 
-**Contract Address**: [`0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815`](https://sepolia.etherscan.io/address/0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815)
+**📍 Contract Address**: [`0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815`](https://sepolia.etherscan.io/address/0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815)
 
-**Network**: Ethereum Testnet Sepolia (Chain ID: 11155111)
+**🌐 Network**: Ethereum Testnet Sepolia (Chain ID: 11155111)
 
-**Deployment Details**:
+**🚀 Live Application**: https://autobalancer.lovable.app
 
-**Live App**: https://autobalancer.lovable.app
+### 📝 Deployment Details:
+- **📍 Deployment Transaction**: [`0xbf42576501199b6966dc7d48fa4b28a18677311ef374f30ab57403fb894afbab`](https://sepolia.etherscan.io/tx/0xbf42576501199b6966dc7d48fa4b28a18677311ef374f30ab57403fb894afbab)
+- **🏗️ Block Number**: 9,911,574
+- **📊 Transaction Index**: 31
+- **📅 Deployment Date**: December 25, 2025 11:52:37 UTC
+
+### ✅ Contract Verification:
+- **🔧 Compiler Version**: solc 0.8.31+commit.fd3a2265
+- **⚙️ EVM Version**: default
+- **🎯 Optimization**: Disabled
+- **✅ Contract Source**: Verified (Exact Match)
+- **📅 Verification Date**: December 25, 2025 17:22:37 (+05:30 UTC)
+
+### 🔗 Etherscan Verification Links:
+- **📊 [View Contract Overview](https://sepolia.etherscan.io/address/0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815)**
+- **💻 [Contract Source Code](https://sepolia.etherscan.io/address/0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815#code)**
+- **🔍 [Read Contract Functions](https://sepolia.etherscan.io/address/0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815#readContract)**
+- **✍️ [Write Contract Functions](https://sepolia.etherscan.io/address/0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815#writeContract)**
+- **📋 [Contract ABI](https://sepolia.etherscan.io/address/0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815#code)**
+- **📈 [Transaction History](https://sepolia.etherscan.io/address/0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815#transactions)**
+- **📊 [Internal Transactions](https://sepolia.etherscan.io/address/0xC3623b0ce1b7976b7d6F8aebdAab70af9fF72F815#internaltx)**
+- **🔄 [Events/Logs](https://sepolia.etherscan.io/address/0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815#events)**
 
 ## 🏅 Hackathon Achievements
 
@@ -357,24 +378,6 @@ npm run dev      # Start indexer
 
 For support or contributions, open an issue on the repository or contact the maintainer via the GitHub link above.
 See [envio/README.md](envio/README.md) for detailed setup and usage instructions.
-- **Deployment Transaction**: [`0xbf42576501199b6966dc7d48fa4b28a18677311ef374f30ab57403fb894afbab`](https://sepolia.etherscan.io/tx/0xbf42576501199b6966dc7d48fa4b28a18677311ef374f30ab57403fb894afbab)
-- **Block Number**: 9,911,574
-- **Transaction Index**: 31
-- **Deployment Date**: December 25, 2025 11:52:37 UTC
-
-**Contract Verification**:
-- **Compiler Version**: solc 0.8.31+commit.fd3a2265
-- **EVM Version**: default
-- **Optimization**: Disabled
-- **Contract Source**: Verified (Exact Match)
-- **Verification Date**: December 25, 2025 17:22:37 (+05:30 UTC)
-
-**Etherscan Links**:
-- [View Contract](https://sepolia.etherscan.io/address/0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815)
-- [Contract Code](https://sepolia.etherscan.io/address/0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815#code)
-- [Read Contract](https://sepolia.etherscan.io/address/0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815#readContract)
-- [Write Contract](https://sepolia.etherscan.io/address/0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815#writeContract)
-- [Contract ABI](https://sepolia.etherscan.io/address/0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815#code)
 <img width="1920" height="1080" alt="Screenshot (42)" src="https://github.com/user-attachments/assets/54148bc8-e29f-47af-9845-3422ecc84bea" />
 
 ## 🛠️ Technology Stack
@@ -402,9 +405,11 @@ See [envio/README.md](envio/README.md) for detailed setup and usage instructions
 - **PostCSS** for CSS processing
 - **Bun** for package management
 
-## 🎬 Demo Video
+## 🎬 Demo Video & Resources
 
-Watch our comprehensive demo showcasing AutoBalancer Pro with MetaMask Advanced Permissions:
+### 📹 **Comprehensive Demo Video**
+
+Watch our complete demo showcasing AutoBalancer Pro with MetaMask Advanced Permissions:
 
 - 🎥 **[AutoBalancer Pro Hackathon Demo](https://youtu.be/sXqiT0W79AU?si=Ysp7BMK1Xw_RFTta)**
 
@@ -414,6 +419,49 @@ Watch our comprehensive demo showcasing AutoBalancer Pro with MetaMask Advanced 
 - 🔄 Portfolio rebalancing using delegated permissions
 - 📊 Real-time monitoring via Envio-powered dashboard
 - 🤝 Agent-to-agent permission delegation (A2A flow)
+
+### 📊 **Presentation & Documentation**
+
+- 📋 **[Project Presentation (PPT)](https://claude.ai/public/artifacts/54f34c15-190f-4b8b-8c24-007ea71ee702)** - Comprehensive slide deck
+- 📝 **[Detailed Feedback Document](HACKATHON_FEEDBACK.md)** - Development experience and suggestions
+- 🏗️ **[Architecture Documentation](README.md#-architecture-overview)** - System design and component overview
+
+## 🔗 **Comprehensive Links Directory**
+
+### 🌐 **Live Application & Demo**
+- 🚀 **[AutoBalancer Pro - Live App](https://autobalancer.lovable.app)**
+- 🎥 **[Hackathon Demo Video](https://youtu.be/sXqiT0W79AU?si=Ysp7BMK1Xw_RFTta)**
+- 📋 **[Project Presentation](https://claude.ai/public/artifacts/54f34c15-190f-4b8b-8c24-007ea71ee702)**
+
+### ⛓️ **Smart Contract & Blockchain**
+- 📍 **Contract Address**: [`0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815`](https://sepolia.etherscan.io/address/0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815)
+- 🔍 **[Contract Source Code](https://sepolia.etherscan.io/address/0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815#code)**
+- ✅ **[Contract Verification](https://sepolia.etherscan.io/address/0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815#code)**
+- 🔄 **[Deployment Transaction](https://sepolia.etherscan.io/tx/0xbf42576501199b6966dc7d48fa4b28a18677311ef374f30ab57403fb894afbab)**
+- 📊 **[Contract Events](https://sepolia.etherscan.io/address/0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815#events)**
+- 💻 **[Read Contract Functions](https://sepolia.etherscan.io/address/0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815#readContract)**
+- ✏️ **[Write Contract Functions](https://sepolia.etherscan.io/address/0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815#writeContract)**
+
+### 💻 **Code & Implementation**
+- 🔐 **[Advanced Permissions Service](src/services/permissions.ts)** - EIP-7702 implementation
+- 🤖 **[DCA Automation Engine](backend/src/services/dcaEngine.ts)** - Permission redemption logic
+- 🔗 **[Agent Contract Interface](src/contracts/agentContract.ts)** - Smart contract integration
+- ⚙️ **[Envio Configuration](explorer/config.yaml)** - Event indexing setup
+- 📊 **[GraphQL Schema](envio-indexer/schema.graphql)** - Data structure definition
+- 🎨 **[Frontend Components](src/components/)** - User interface implementation
+
+### 📱 **Social Media & Community**
+- 📅 **[Complete Development Journey](README.md#-x-twitter-presence)** - 30+ posts documenting progress
+- 🐦 **[@Roan0i Twitter Profile](https://x.com/Roan0i)** - Follow for updates
+- 👥 **[GitHub Repository](https://github.com/rohan911438)** - Source code and contributions
+- 💬 **[Hackathon Feedback](HACKATHON_FEEDBACK.md)** - Detailed developer experience
+
+### 📚 **Documentation & Resources**
+- 📖 **[Setup Guide](README.md#-getting-started)** - Complete installation instructions
+- 🏗️ **[Architecture Overview](README.md#-architecture-overview)** - System design
+- 🔧 **[Configuration Guide](README.md#-configuration)** - Environment setup
+- 🧪 **[Testing Instructions](README.md#testing)** - Integration testing
+- 🛠️ **[Technology Stack](README.md#-technology-stack)** - Technical specifications
 
 ---
 
@@ -618,14 +666,6 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 For support and questions, please open an issue in the repository.
 
-## 📂 Presentation (PPT)
-
-A presentation (PowerPoint) version of the project overview is available (generated via Claude). You can view or download the PPT here:
-
-- [Download presentation (PPT) — Claude artifact](https://claude.ai/public/artifacts/54f34c15-190f-4b8b-8c24-007ea71ee702)
-
-Use this slide deck for stakeholder briefings, demos, or to export directly into PowerPoint.
-
 ---
 
 ## 🏆 Hackathon Submission Summary
@@ -665,20 +705,39 @@ Use this slide deck for stakeholder briefings, demos, or to export directly into
 - ✅ **Smart Accounts Kit:** Full integration with MetaMask SDK
 - ✅ **Working Demo:** Live application with Advanced Permissions in main flow
 - ✅ **Envio Integration:** Complete indexing setup with real-time data
-- ✅ **Verification:** Contract verified on Etherscan
+- ✅ **Contract Verification:** Fully verified on Etherscan with source code
 
-#### **📊 Key Metrics:**
+#### **📊 Key Project Metrics:**
 
 - **🏗️ Architecture:** 4-component system (Frontend, Backend, Blockchain, Indexer)
-- **🔐 Smart Contract:** Verified deployment on Sepolia
+- **🔐 Smart Contract:** Verified deployment on Sepolia testnet
 - **📈 Real-time Data:** 5 event types indexed via Envio
 - **🎯 Automation:** DCA + Portfolio Rebalancing + Permission Delegation
-- **💡 Innovation:** First DeFi platform with A2A permission flows
+- **💡 Innovation:** First DeFi platform with complete A2A permission flows
+- **📱 Social Presence:** 30+ development journey posts over 3+ months
+- **🌐 Live Demo:** Production-ready application with full functionality
+
+#### **🔗 Quick Access Links:**
+
+| Resource | Link |
+|----------|------|
+| **🚀 Live Application** | [autobalancer.lovable.app](https://autobalancer.lovable.app) |
+| **🎥 Demo Video** | [YouTube Demo](https://youtu.be/sXqiT0W79AU?si=Ysp7BMK1Xw_RFTta) |
+| **📋 Presentation** | [PPT Slides](https://claude.ai/public/artifacts/54f34c15-190f-4b8b-8c24-007ea71ee702) |
+| **⛓️ Smart Contract** | [Etherscan](https://sepolia.etherscan.io/address/0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815) |
+| **💻 Source Code** | [GitHub](https://github.com/rohan911438) |
+| **💬 Feedback** | [HACKATHON_FEEDBACK.md](HACKATHON_FEEDBACK.md) |
+| **📱 Social Media** | [X/Twitter Thread](https://x.com/Roan0i) |
 
 ---
+
+### **🎯 Final Submission Details**
 
 **Team:** Brotherhood  
 **Lead Developer:** Rohan Kumar  
 **GitHub:** [rohan911438](https://github.com/rohan911438)  
-**Live Demo:** https://autobalancer.lovable.app  
-**Contract:** [0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815](https://sepolia.etherscan.io/address/0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815)
+**Contract Address:** [`0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815`](https://sepolia.etherscan.io/address/0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815)  
+**Live Demo:** [autobalancer.lovable.app](https://autobalancer.lovable.app)  
+**Submission Date:** January 2, 2026  
+
+**🏅 Ready for Judging:** All tracks requirements met with comprehensive documentation, working demo, and extensive social media engagement.
