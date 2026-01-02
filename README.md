@@ -124,6 +124,14 @@ We've been actively documenting our **AutoBalancer Pro** development journey and
 - 🔗 [Complete Tech Stack & Architecture](https://x.com/Roan0i/status/2005234117936624045?s=20)
 - 🔗 [Hackathon Submission & Live Demo](https://x.com/Roan0i/status/2005234223662481865?s=20)
 
+**📅 Final Hackathon Day Updates:**
+- 🔗 [Final Project Presentation](https://x.com/Roan0i/status/2005233515227684934?s=20)
+- 🔗 [Live Demo Walkthrough](https://x.com/Roan0i/status/2005233642134811089?s=20)
+- 🔗 [Technical Deep Dive](https://x.com/Roan0i/status/2005233774230143272?s=20)
+- 🔗 [Hackathon Submission Summary](https://x.com/Roan0i/status/2005233887925129412?s=20)
+- 🔗 [Community Feedback Collection](https://x.com/Roan0i/status/2005234117936624045?s=20)
+- 🔗 [Project Launch Announcement](https://x.com/Roan0i/status/2005234223662481865?s=20)
+
 #### **📈 Social Media Impact:**
 - **📊 Total Posts:** 30+ development journey posts
 - **🎯 Hashtags Used:** #MetaMaskHackathon #AdvancedPermissions #DeFi #Automation #Envio
