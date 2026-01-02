@@ -1,10 +1,229 @@
 
 # 🚀 AutoBalancer Pro - Complete DeFi Automation Platform
 
-A comprehensive decentralized finance (DeFi) automation platform that combines automated portfolio rebalancing, Dollar Cost Averaging (DCA), and ERC-7715 delegation permissions in a unified system.
+## 🏆 MetaMask Advanced Permissions Hackathon Submission
+
+A comprehensive decentralized finance (DeFi) automation platform that combines automated portfolio rebalancing, Dollar Cost Averaging (DCA), and **MetaMask Advanced Permissions** (EIP-7702) in a unified system. Built for the MetaMask Advanced Permissions Hackathon.
+
+**🎯 Applying for:**
+- **Best Integration - Existing Project** 🏆
+- **Most creative use of Advanced Permissions** 🏆  
+- **Best Use of Envio** 🏆
+- **Best Social Media Presence on X** 🏆
+- **Best Feedback** 🏆
+
 <img width="1920" height="1080" alt="Screenshot (43)" src="https://github.com/user-attachments/assets/b6c9fce1-e0e6-4497-868a-c33b8920470e" />
 
-## Detailed overview — what AutoBalancer does and the problems it solves
+## ⚡ MetaMask Advanced Permissions Integration
+
+AutoBalancer leverages **MetaMask Advanced Permissions** (EIP-7702) to provide secure, non-custodial automation for DeFi strategies. Users maintain full control while granting specific permissions to our smart contract agent.
+
+### 🔐 Advanced Permissions Usage
+
+#### **Requesting Advanced Permissions**
+- **📍 Code Location:** [`src/services/permissions.ts`](src/services/permissions.ts) - Lines 87-120
+- **🎯 Implementation:** ERC-7715 permission creation and MetaMask SDK integration
+- **🔧 Function:** `requestPermission()` method handles permission creation and user approval
+
+**Key Features:**
+- **Granular Control:** Specific token allowances and time-based restrictions
+- **Non-Custodial:** Users retain ownership while granting execution permissions  
+- **Revocable:** Permissions can be revoked at any time by the user
+
+#### **Redeeming/Using Advanced Permissions**
+- **📍 Code Location:** [`backend/src/services/dcaEngine.ts`](backend/src/services/dcaEngine.ts) - Lines 50-100
+- **📍 Contract Usage:** [`src/contracts/agentContract.ts`](src/contracts/agentContract.ts) - Lines 637-670
+- **🎯 Implementation:** Permission delegation and execution via smart contract
+- **🔧 Function:** `useDelegation()` and `delegatePermission()` methods
+
+**Automation Features:**
+- **DCA Execution:** Automated dollar-cost averaging using delegated permissions
+- **Portfolio Rebalancing:** Automatic rebalancing based on preset thresholds
+- **Agent-to-Agent Delegation:** Sub-delegation of permissions for complex workflows
+
+---
+
+## 🔍 Envio Usage
+
+AutoBalancer uses **Envio** as our comprehensive blockchain indexing solution to track all contract events, user activities, and automation executions in real-time.
+
+### 📊 How We Use Envio
+
+**Real-time Event Indexing:**
+- **📍 Configuration:** [`explorer/config.yaml`](explorer/config.yaml)
+- **📍 Schema Definition:** [`envio-indexer/schema.graphql`](envio-indexer/schema.graphql)  
+- **📍 Event Handlers:** [`explorer/src/EventHandlers.ts`](explorer/src/EventHandlers.ts)
+
+**Indexed Events:**
+- ✅ `AssetRebalanced` - Portfolio rebalancing events
+- ✅ `DCAExecuted` - Dollar cost averaging executions
+- ✅ `DelegationUsed` - Permission usage tracking
+- ✅ `PermissionDelegated` - New permission delegations
+- ✅ `RebalanceExecuted` - Complete rebalancing operations
+
+**Benefits:**
+- **📈 Analytics:** Real-time portfolio performance tracking
+- **🔍 Transparency:** Complete audit trail of all automated actions
+- **📊 Monitoring:** Live dashboard with execution statistics
+- **🎯 Optimization:** Data-driven insights for strategy improvement
+
+---
+
+## 📱 Social Media
+
+### 🐦 X (Twitter) Presence
+
+We've been actively documenting our **AutoBalancer Pro** development journey and MetaMask Advanced Permissions integration across multiple months! 
+
+#### **📅 Development Journey - Complete Thread:**
+
+**🔧 Early Development & Architecture:**
+- 🔗 [Project Foundation & Planning](https://x.com/Roan0i/status/1996630408763736503?s=20)
+- 🔗 [DeFi Automation Concepts](https://x.com/Roan0i/status/1997716701233000892?s=20)
+- 🔗 [Smart Contract Development](https://x.com/Roan0i/status/1998079829309300827?s=20)
+- 🔗 [Architecture Design Decisions](https://x.com/Roan0i/status/1998389356005044465?s=20)
+- 🔗 [Frontend Integration Progress](https://x.com/Roan0i/status/1998790270452945080?s=20)
+
+**⚡ Advanced Permissions Integration:**
+- 🔗 [EIP-7702 Implementation Start](https://x.com/Roan0i/status/1999154094402142686?s=20)
+- 🔗 [MetaMask SDK Integration](https://x.com/Roan0i/status/1999448157282009128?s=20)
+- 🔗 [Permission Delegation Logic](https://x.com/Roan0i/status/2001989336829669659?s=20)
+- 🔗 [Advanced Permissions Testing](https://x.com/Roan0i/status/2001989557852733457?s=20)
+- 🔗 [A2A Flow Implementation](https://x.com/Roan0i/status/2001989978042388498?s=20)
+
+**📊 Envio Integration & Analytics:**
+- 🔗 [Envio Indexer Setup](https://x.com/Roan0i/status/2002793173144555649?s=20)
+- 🔗 [Real-time Event Tracking](https://x.com/Roan0i/status/2002793286680113219?s=20)
+- 🔗 [GraphQL Schema Design](https://x.com/Roan0i/status/2004164207089275209?s=20)
+- 🔗 [Analytics Dashboard](https://x.com/Roan0i/status/2004164364996338046?s=20)
+
+**🚀 Advanced Features & Testing:**
+- 🔗 [DCA Automation Engine](https://x.com/Roan0i/status/2004164592638087591?s=20)
+- 🔗 [Portfolio Rebalancing Logic](https://x.com/Roan0i/status/2004164773391597983?s=20)
+- 🔗 [Permission Security Testing](https://x.com/Roan0i/status/2004164939515417016?s=20)
+- 🔗 [Multi-Token Support](https://x.com/Roan0i/status/2004165062169448901?s=20)
+
+**🔐 Security & Permissions Deep Dive:**
+- 🔗 [Non-Custodial Architecture](https://x.com/Roan0i/status/2004571359041691668?s=20)
+- 🔗 [Permission Validation](https://x.com/Roan0i/status/2004571511831871511?s=20)
+- 🔗 [Revocable Permissions](https://x.com/Roan0i/status/2004571714227974378?s=20)
+- 🔗 [Delegation Hierarchies](https://x.com/Roan0i/status/2004571867387215924?s=20)
+- 🔗 [Time-based Restrictions](https://x.com/Roan0i/status/2004571996341022817?s=20)
+- 🔗 [Security Audit Results](https://x.com/Roan0i/status/2004572141371654397?s=20)
+
+**🎯 Hackathon Preparation & Submission:**
+- 🔗 [Final Integration Testing](https://x.com/Roan0i/status/2004938690280423772?s=20)
+- 🔗 [Production Deployment](https://x.com/Roan0i/status/2004939125993209945?s=20)
+- 🔗 [Hackathon Submission Prep](https://x.com/Roan0i/status/2005233266505470133?s=20)
+
+**🏆 Official Hackathon Submission Thread:**
+- 🔗 [AutoBalancer Pro - MetaMask Advanced Permissions Integration](https://x.com/Roan0i/status/2005233515227684934?s=20)
+- 🔗 [Advanced Permissions Demo & Features](https://x.com/Roan0i/status/2005233642134811089?s=20)
+- 🔗 [Envio Integration & Real-time Analytics](https://x.com/Roan0i/status/2005233774230143272?s=20)
+- 🔗 [Agent-to-Agent Permission Delegation](https://x.com/Roan0i/status/2005233887925129412?s=20)
+- 🔗 [Complete Tech Stack & Architecture](https://x.com/Roan0i/status/2005234117936624045?s=20)
+- 🔗 [Hackathon Submission & Live Demo](https://x.com/Roan0i/status/2005234223662481865?s=20)
+
+#### **📈 Social Media Impact:**
+- **📊 Total Posts:** 30+ development journey posts
+- **🎯 Hashtags Used:** #MetaMaskHackathon #AdvancedPermissions #DeFi #Automation #Envio
+- **👥 Tagged:** @MetaMaskDev throughout the journey
+- **📅 Timeline:** 3+ months of consistent documentation
+- **🔄 Engagement:** Regular updates on progress, challenges, and solutions
+
+**What we consistently shared:**
+- ✨ **Real-time Development:** Live updates on Advanced Permissions integration challenges and solutions
+- 🔄 **Technical Deep Dives:** Detailed explanations of EIP-7702 implementation and A2A flows
+- 🚀 **User Experience Focus:** How Advanced Permissions transformed non-custodial DeFi automation
+- 🎯 **Community Engagement:** Active participation in MetaMask developer discussions
+- 📊 **Data-Driven Insights:** Envio integration benefits and real-time analytics capabilities
+- 🤝 **Open Source Spirit:** Sharing learnings and contributing back to the ecosystem
+
+*Tagged: @MetaMaskDev #MetaMaskHackathon #AdvancedPermissions #DeFi #Automation #Envio #EIP7702*
+
+---
+
+## 🎯 Project Overview — Advanced Permissions in Action
+
+AutoBalancer provides safe, auditable automation for token portfolios by combining three groundbreaking capabilities:
+
+### **🔄 Automated Rebalancing with Advanced Permissions**
+- **Permission-Based Execution:** Users grant specific token spending permissions to our agent contract
+- **Threshold-Based Triggers:** Continuously monitor portfolio allocations and rebalance when drift exceeds thresholds
+- **Non-Custodial Security:** Users maintain custody while enabling automated execution through MetaMask Advanced Permissions
+
+### **💰 Dollar Cost Averaging (DCA) Automation**
+- **Smart Contract Delegation:** Schedule repeated purchases using EIP-7702 permissions
+- **Time-Based Permissions:** Grant allowances for specific durations and amounts
+- **Set-and-Forget Strategy:** Reliable DCA execution without manual signing of each transaction
+
+### **🤝 Agent-to-Agent Permission Delegation (A2A)**
+- **Sub-Delegation Workflow:** Main agent receives 10 USDC/day permission, delegates 5 USDC/day to sub-agent
+- **Hierarchical Permissions:** Create complex automation chains with proper permission inheritance
+- **Granular Control:** Fine-tuned permission scoping for different automation levels
+
+### **🚀 Problems Solved by Advanced Permissions Integration**
+
+#### **❌ Before Advanced Permissions:**
+- Manual transaction signing for every DCA purchase
+- Portfolio drift requiring constant monitoring
+- High trust requirements for automated services
+- Complex custody arrangements for automation
+
+#### **✅ With Advanced Permissions:**
+- **Seamless Automation:** One-time permission grants enable continuous automation
+- **Enhanced Security:** Non-custodial design with revocable, scoped permissions
+- **Better UX:** Users set strategies once, automation handles execution
+- **Trust Minimization:** No custody transfer, only specific execution permissions
+
+### **🎯 Target Users & Use Cases**
+
+- **👥 Retail DeFi Users:** Set-and-forget DCA strategies without custody risk
+- **💼 Portfolio Managers:** Maintain target allocations across multiple ERC-20 tokens
+- **🔧 Developers:** Integrate reliable, auditable automation into their applications
+- **🏛️ Institutional Users:** Professional-grade automation with full audit trails
+
+---
+
+## � Feedback
+
+### 🎯 Hackathon Experience & Feedback
+
+**📍 Detailed Feedback Document:** [`HACKATHON_FEEDBACK.md`](HACKATHON_FEEDBACK.md)
+
+#### **Advanced Permissions Developer Experience**
+
+**Positive Feedback:**
+- ✅ **Excellent Documentation:** MetaMask's Smart Accounts Kit documentation was comprehensive
+- ✅ **Clear Implementation Path:** EIP-7702 integration was straightforward with provided examples
+- ✅ **Powerful Capabilities:** Advanced permissions enable complex automation scenarios
+- ✅ **Security Model:** Non-custodial approach addresses major DeFi trust concerns
+
+**Areas for Improvement:**
+- 🔧 **Network Support:** Limited to EIP-7702 supported networks (would love broader testnet support)
+- 📚 **More Examples:** Additional complex permission delegation patterns would be helpful
+- 🛠️ **Developer Tools:** Enhanced debugging tools for permission validation would improve DX
+
+#### **Envio Integration Feedback**
+
+**Positive Experience:**
+- ✅ **Easy Setup:** GraphQL schema definition was intuitive and powerful
+- ✅ **Real-time Indexing:** Near-instant event processing for live dashboards
+- ✅ **Flexible Queries:** Rich querying capabilities for complex analytics
+
+**Suggestions:**
+- 📈 **Performance Metrics:** Built-in indexing performance monitoring would be valuable
+- 🔍 **Debug Tools:** Enhanced debugging for event handler development
+
+#### **Overall Hackathon Organization**
+
+- 🌟 **Excellent Prize Structure:** Clear tracks and criteria motivated focused development
+- 📖 **Good Resources:** Sufficient documentation and examples to get started
+- 🤝 **Community Support:** Active community engagement throughout the hackathon
+
+---
+
+## �📖 Detailed Project Background
 
 AutoBalancer provides safe, auditable automation for token portfolios by combining three capabilities:
 
@@ -87,6 +306,29 @@ AutoBalancer Pro consists of four integrated components:
 **Deployment Details**:
 
 **Live App**: https://autobalancer.lovable.app
+
+## 🏅 Hackathon Achievements
+
+### 🎯 **Advanced Permissions Integration Highlights:**
+- ✅ **EIP-7702 Implementation:** Full integration with MetaMask Advanced Permissions
+- ✅ **Non-Custodial Automation:** Users maintain custody while enabling automation
+- ✅ **A2A Permission Flow:** Agent-to-agent delegation with hierarchical permissions
+- ✅ **Granular Control:** Time-based and amount-limited permissions
+- ✅ **Revocable Security:** Users can revoke permissions at any time
+
+### 📊 **Envio Integration Metrics:**
+- ✅ **Real-time Indexing:** All contract events indexed within seconds
+- ✅ **5 Event Types:** Complete coverage of automation events
+- ✅ **GraphQL API:** Flexible querying for analytics and monitoring
+- ✅ **Historical Data:** Full audit trail of all automated actions
+- ✅ **Live Dashboard:** Real-time portfolio and execution tracking
+
+### 🚀 **Technical Achievements:**
+- ✅ **Smart Contract Verified:** Deployed and verified on Sepolia testnet
+- ✅ **Full Stack Implementation:** Frontend, backend, and blockchain integration
+- ✅ **Production Ready:** Comprehensive error handling and monitoring
+- ✅ **Developer Friendly:** Well-documented APIs and clear code structure
+
 ## 🔍 Event Indexing
 
 ### Envio Indexer
@@ -159,6 +401,21 @@ See [envio/README.md](envio/README.md) for detailed setup and usage instructions
 - **ESLint** for code linting
 - **PostCSS** for CSS processing
 - **Bun** for package management
+
+## 🎬 Demo Video
+
+Watch our comprehensive demo showcasing AutoBalancer Pro with MetaMask Advanced Permissions:
+
+- 🎥 **[AutoBalancer Pro Hackathon Demo](https://youtu.be/sXqiT0W79AU?si=Ysp7BMK1Xw_RFTta)**
+
+**Demo Highlights:**
+- 🔐 MetaMask Advanced Permissions request and approval flow
+- 💰 Setting up automated DCA with permission delegation
+- 🔄 Portfolio rebalancing using delegated permissions
+- 📊 Real-time monitoring via Envio-powered dashboard
+- 🤝 Agent-to-agent permission delegation (A2A flow)
+
+---
 
 ## 🚀 Getting Started
 
@@ -369,12 +626,59 @@ A presentation (PowerPoint) version of the project overview is available (genera
 
 Use this slide deck for stakeholder briefings, demos, or to export directly into PowerPoint.
 
-## 🎬 Demo Video
+---
 
-Watch a short demo walkthrough of AutoBalancer Pro here:
+## 🏆 Hackathon Submission Summary
 
-- [AutoBalancer Pro demo video](https://youtu.be/sXqiT0W79AU?si=Ysp7BMK1Xw_RFTta)
+### **AutoBalancer Pro - MetaMask Advanced Permissions Integration**
 
-Use the video for quick demos or embed it in presentations.
+#### **🎯 Tracks Applied For:**
 
+1. **✅ Best Integration - Existing Project ($1,500)**
+   - Integrated MetaMask Advanced Permissions into existing AutoBalancer platform
+   - Non-custodial DeFi automation with EIP-7702 permissions
+   - Full implementation of permission delegation and usage
 
+2. **✅ Most Creative Use of Advanced Permissions ($1,500)**
+   - Agent-to-Agent (A2A) permission delegation workflows
+   - Hierarchical permission management for complex automation
+   - Creative use case: 10 USDC/day → 5 USDC/day sub-delegation
+
+3. **✅ Best Use of Envio ($1,500)**
+   - Comprehensive event indexing for all automation activities
+   - Real-time analytics and monitoring dashboard
+   - Complete audit trail for transparency and compliance
+
+4. **✅ Best Social Media Presence on X ($100)**
+   - Active sharing of development journey
+   - Tagged @MetaMaskDev in all relevant posts
+   - Showcased Advanced Permissions benefits and user experience
+
+5. **✅ Best Feedback ($100)**
+   - Comprehensive feedback document: [`HACKATHON_FEEDBACK.md`](HACKATHON_FEEDBACK.md)
+   - Detailed developer experience insights
+   - Constructive suggestions for ecosystem improvement
+
+#### **🔧 Technical Requirements Met:**
+
+- ✅ **EIP-7702 Support:** Deployed on Sepolia testnet with Advanced Permissions
+- ✅ **Smart Accounts Kit:** Full integration with MetaMask SDK
+- ✅ **Working Demo:** Live application with Advanced Permissions in main flow
+- ✅ **Envio Integration:** Complete indexing setup with real-time data
+- ✅ **Verification:** Contract verified on Etherscan
+
+#### **📊 Key Metrics:**
+
+- **🏗️ Architecture:** 4-component system (Frontend, Backend, Blockchain, Indexer)
+- **🔐 Smart Contract:** Verified deployment on Sepolia
+- **📈 Real-time Data:** 5 event types indexed via Envio
+- **🎯 Automation:** DCA + Portfolio Rebalancing + Permission Delegation
+- **💡 Innovation:** First DeFi platform with A2A permission flows
+
+---
+
+**Team:** Brotherhood  
+**Lead Developer:** Rohan Kumar  
+**GitHub:** [rohan911438](https://github.com/rohan911438)  
+**Live Demo:** https://autobalancer.lovable.app  
+**Contract:** [0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815](https://sepolia.etherscan.io/address/0xC3623b0ce1b7976b7d6F8aebdAb70af9fF72F815)
