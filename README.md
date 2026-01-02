@@ -70,14 +70,19 @@ AutoBalancer uses **Envio** as our comprehensive blockchain indexing solution to
 ---
 ## Feedback
 
-ALL LINKS 
+### ALL LINKS
 
 https://x.com/Roan0i/status/2005233515227684934?s=20
-https://x.com/Roan0i/status/2005233642134811089?s=20 
+
+https://x.com/Roan0i/status/2005233642134811089?s=20
+
 https://x.com/Roan0i/status/2005233774230143272?s=20
+
 https://x.com/Roan0i/status/2005233887925129412?s=20
+
 https://x.com/Roan0i/status/2005234117936624045?s=20
-https://x.com/Roan0i/status/2005234223662481865?s=20 
+
+https://x.com/Roan0i/status/2005234223662481865?s=20
 
 
 ## 📱 Social Media
